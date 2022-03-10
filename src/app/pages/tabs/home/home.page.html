@@ -9,10 +9,50 @@
 
 <ion-content>
 
-  <ion-slides pager="true">
-    <ion-slide>
-      <div [ngStyle]="{'background-image':'url(' + 'assets/imgs/1.jpg' + ')'}"></div>
-    </ion-slide>
+<div class="borderBottom">
+    <ion-slides pager="true" [options]="slideOptions">
+      <ion-slide>
+        <div [ngStyle]="{'background-image':'url(' + 'assets/imgs/1.jpg' + ')'}"></div>
+      </ion-slide>
+      <ion-slide>
+        <div [ngStyle]="{'background-image':'url(' + 'assets/imgs/2.jpg' + ')'}"></div>
+      </ion-slide>
+      <ion-slide>
+        <div [ngStyle]="{'background-image':'url(' + 'assets/imgs/3.jpg' + ')'}"></div>
+      </ion-slide>
   </ion-slides>
+</div>
+
+<ion-list>
+  <ion-list-header class="ion-margin-bottom">
+    <ion-label>
+      <h4>Restaurants Nearby</h4>
+      <p>Discover unique tastes near you</p>
+    </ion-label>
+  </ion-list-header>
+  <ion-item lines="none">
+    <ion-thumbnail slot="start">
+      <img src="assets/imgs/1.jpg"/>
+    </ion-thumbnail>
+    <ion-label>
+      <h4>Stayfit</h4>
+      <ion-text>
+        <p class="pStyle">
+          Italian, Mexican
+        </p>
+      </ion-text>
+      <span>
+        <ion-icon name="star"></ion-icon>
+        5 .
+      </span>
+      25 mins . 10 CHF
+      <ion-text color="tertiary">
+        <p class="distance">
+          2.59 km away
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+</ion-list>
 
 </ion-content>
