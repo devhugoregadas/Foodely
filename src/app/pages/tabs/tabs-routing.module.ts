@@ -23,14 +23,14 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () => import('./account/account.module').then( m => m.AccountPageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/tabs/home',
+        pathMatch: 'full'
       }
     ]
   },
-  {
-    path: '',
-    redirectTo: '/tabs/home',
-    pathMatch: 'full'
-  }
 ];
 
 @NgModule({
