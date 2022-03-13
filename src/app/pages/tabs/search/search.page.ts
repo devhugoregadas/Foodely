@@ -66,6 +66,12 @@ export class SearchPage implements OnInit {
     }, 500);
   }
 
+
+  /**
+   *
+   * @param onSearchChange method to search the object on the object array allRestaurants
+   */
+
   async onSearchChange(event) {
     this.query = event.detail.value.toLowerCase();
     this.restaurants = [];
