@@ -16,6 +16,7 @@ export class SearchPage implements OnInit {
   query: any;
   allRestaurants: any[] = [
     {
+      uid: '12dsds12323',
       cover: 'assets/imgs/1.jpg',
       name: 'Stayfit',
       shortName: 'stayfit',
@@ -25,10 +26,10 @@ export class SearchPage implements OnInit {
       ],
       rating: 5,
       deliveryTime: 25,
-      // distance: 2.5,
       price: 100
     },
     {
+      uid: '13dsds12323',
       cover: 'assets/imgs/2.jpg',
       name: 'Stayfit1',
       shortName: 'stayfit1',
@@ -38,10 +39,10 @@ export class SearchPage implements OnInit {
       ],
       rating: 5,
       deliveryTime: 25,
-      // distance: 2.5,
       price: 100
     },
     {
+      uid: '14dsds12323',
       cover: 'assets/imgs/3.jpg',
       name: 'Stayfit2',
       shortName: 'stayfit2',
@@ -51,7 +52,6 @@ export class SearchPage implements OnInit {
       ],
       rating: 5,
       deliveryTime: 25,
-      // distance: 2.5,
       price: 100
     },
   ];

@@ -32,7 +32,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'restaurants/:restaurantId', //Fetch restaurantId
+    path: 'restaurants/:restaurantId', // Fetch & Hold the restaurant ID
     loadChildren: () => import('./items/items.module').then( m => m.ItemsPageModule)
   },
 ];
