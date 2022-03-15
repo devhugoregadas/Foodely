@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Plugins } from '@capacitor/core';
-const { Storage } = Plugins;
+import { Storage } from '@capacitor/storage';
 
 @Component({
   selector: 'app-cart',
@@ -26,11 +25,11 @@ export class CartPage implements OnInit {
   }
 
   getCart() {
-   return Plugins.Storage.get({key: 'cart'});
+   return Storage.get({key: 'cart'});
   }
 
   async getmodel() {
-    let data: any = await this.getCart();
+    const data: any = await this.getCart();
     if(data?.value) {
       this.model = await JSON.parse(data.value);
       console.log(this.model);
@@ -39,7 +38,7 @@ export class CartPage implements OnInit {
   }
 
   async calculate() {
-    let item = this.model.items.filter(x => x.quantity > 0);
+    const item = this.model.items.filter(x => x.quantity > 0);
     this.model.items = item;
     this.model.totalPrice = 0;
     this.model.totalItem = 0;
@@ -52,7 +51,7 @@ export class CartPage implements OnInit {
     this.model.deliveryCharge = this.deliveryCharge;
     this.model.totalPrice = parseFloat(this.model.totalPrice).toFixed(2);
     this.model.grandTotal = (parseFloat(this.model.totalPrice) + parseFloat(this.model.deliveryCharge)).toFixed(2);
-    if(this.model.totalItem == 0) {
+    if(this.model.totalItem === 0) {
       this.model.totalItem = 0;
       this.model.totalPrice = 0;
       this.model.grandTotal = 0;
@@ -63,11 +62,11 @@ export class CartPage implements OnInit {
   }
 
   clearCart() {
-    return Plugins.Storage.remove({key: 'cart'});
+    return Storage.remove({key: 'cart'});
   }
 
   checkUrl() {
-    let url: any = (this.router.url).split('/');
+    const url: any = (this.router.url).split('/');
     console.log('url: ', url);
     const spliced = url.splice(url.length - 2, 2); // /tabs/cart url.length - 1 - 1
     this.urlCheck = spliced[0];

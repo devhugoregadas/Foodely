@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Storage } from '@capacitor/storage';
 import { NavController } from '@ionic/angular';
 
 
@@ -235,7 +236,7 @@ export class ItemsPage implements OnInit {
       this.cartData.restaurant = {};
       this.cartData.restaurant = this.data;
       console.log('cartData', this.cartData);
-      Storage.Storage.set({
+      Storage.set({
         key: 'cart',
         value: JSON.stringify(this.cartData)
       });
