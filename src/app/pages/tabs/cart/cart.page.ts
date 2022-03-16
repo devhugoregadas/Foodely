@@ -79,10 +79,8 @@ export class CartPage implements OnInit {
     console.log('url: ', url);
     const spliced = url.splice(url.length - 2, 2); // /tabs/cart url.length - 1 - 1
     this.urlCheck = spliced[0];
-    console.log('urlcheck: ', this.urlCheck);
     url.push(this.urlCheck);
     this.url = url;
-    console.log(this.url);
   }
 
   getPreviousUrl() {
@@ -96,17 +94,15 @@ export class CartPage implements OnInit {
         this.model.items[index].quantity = 1;
         this.calculate();
       } else {
-        this.model.items[index].quantity += 1;
+        this.model.items[index].quantity += 1; // this.model.items[index].quantity = this.model.items[index].quantity + 1
         this.calculate();
       }
-    } catch(e) {
-      console.log(e);
-    }
+    } catch(e) {}
   }
 
   quantityMinus(index) {
     if(this.model.items[index].quantity !== 0) {
-      this.model.items[index].quantity -= 1;
+      this.model.items[index].quantity -= 1; // this.model.items[index].quantity = this.model.items[index].quantity - 1
     } else {
       this.model.items[index].quantity = 0;
     }
@@ -131,9 +127,7 @@ export class CartPage implements OnInit {
         status: 'Created',
         paid: 'COD'
       };
-      console.log('order: ', data);
     } catch(e) {
-      console.log(e);
     }
   }
 
