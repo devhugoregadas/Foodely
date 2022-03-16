@@ -26,7 +26,7 @@
     </ion-list-header>
     <ng-container *ngFor="let item of items; let i = index">
       <app-item 
-        *ngIf="category.id === item.category_id"
+        *ngIf="category.id === item.categoryId"
         [item]="item"
         [index]="i"
         (add)="quantityPlus($event)"

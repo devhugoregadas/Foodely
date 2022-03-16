@@ -90,7 +90,7 @@ export class ItemsPage implements OnInit {
         desc: 'Great in taste',
         id: 'i1',
         name: 'Pizza',
-        price: 120,
+        price: 12,
         rating: 0,
         status: true,
         uid: '12dsds12323',
@@ -194,7 +194,7 @@ export class ItemsPage implements OnInit {
         this.items[index].quantity = 1;
         this.calculate();
       } else {
-        this.items[index].quantity += 1; // this.items[index].quantity = this.items[index].quantity + 1
+        this.items[index].quantity += 1;
         this.calculate();
       }
     } catch(e) {
@@ -204,7 +204,7 @@ export class ItemsPage implements OnInit {
 
   quantityMinus(index) {
     if(this.items[index].quantity !== 0) {
-      this.items[index].quantity -= 1; // this.items[index].quantity = this.items[index].quantity - 1
+      this.items[index].quantity -= 1;
     } else {
       this.items[index].quantity = 0;
     }
