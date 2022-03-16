@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@capacitor/storage';
+import { IonContent } from '@ionic/angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-cart',
@@ -9,11 +11,13 @@ import { Storage } from '@capacitor/storage';
 })
 export class CartPage implements OnInit {
 
+  @ViewChild(IonContent, {static: false}) content: IonContent;
   urlCheck: any;
   url: any;
   model: any = {};
   deliveryCharge = 20;
   instruction: any;
+  location: any = {};
 
   constructor(
     private router: Router
@@ -21,15 +25,20 @@ export class CartPage implements OnInit {
 
   ngOnInit() {
     this.checkUrl();
-    this.getmodel();
+    this.getModel();
   }
 
   getCart() {
    return Storage.get({key: 'cart'});
   }
 
-  async getmodel() {
+  async getModel() {
     const data: any = await this.getCart();
+    this.location = {
+      lat: 28.653831,
+      lng: 77.188257,
+      address: 'Vernier, Genève'
+    };
     if(data?.value) {
       this.model = await JSON.parse(data.value);
       console.log(this.model);
@@ -80,16 +89,56 @@ export class CartPage implements OnInit {
     return this.url.join('/');
   }
 
-  quantityPlus(index) {}
+  quantityPlus(index) {
+    try {
+      console.log(this.model.items[index]);
+      if(!this.model.items[index].quantity || this.model.items[index].quantity === 0) {
+        this.model.items[index].quantity = 1;
+        this.calculate();
+      } else {
+        this.model.items[index].quantity += 1;
+        this.calculate();
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
-  quantityMinus(index) {}
+  quantityMinus(index) {
+    if(this.model.items[index].quantity !== 0) {
+      this.model.items[index].quantity -= 1;
+    } else {
+      this.model.items[index].quantity = 0;
+    }
+    this.calculate();
+  }
 
   addAddress() {}
 
   changeAddress() {}
 
   makePayment() {
-    console.log('make payment');
+    try {
+      const data = {
+        restaurantId: this.model.restaurant.uid,
+        res: this.model.restaurant,
+        order: JSON.stringify(this.model.items),
+        time: moment().format('lll'),
+        address: this.location,
+        total: this.model.totalPrice,
+        grandTotal: this.model.grandTotal,
+        deliveryCharge: this.deliveryCharge,
+        status: 'Created',
+        paid: 'COD'
+      };
+      console.log('order: ', data);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  scrollToBottom() {
+    this.content.scrollToBottom(500);
   }
 
 }
