@@ -50,8 +50,8 @@ export class AccountPage implements OnInit {
           grandTotal: '44.00',
           id: '5aG0RsPuze8NX00B7uR1',
           order: [
-            {categoryId: 'e00', cover: 'assets/imgs/pizza.jpg', desc: 'Great in taste', id: 'i1', name: 'Pizza', price: 120, quantity: 1, rating: 0, status: true, uid: 'r1', variation: false, veg: false},
-            {categoryId: 'e00', cover: 'assets/imgs/pasta.jpg', desc: 'Great in taste', id: 'i3', name: 'Pasta', price: 150, quantity: 2, rating: 0, status: true, uid: 'r1', variation: false, veg: false}
+            {categoryId: 'e00', cover: 'assets/imgs/pizza.jpg', desc: 'Great in taste', id: 'i1', name: 'Pizza', price: 12, quantity: 1, rating: 0, status: true, uid: 'r1', variation: false, veg: false},
+            {categoryId: 'e00', cover: 'assets/imgs/pasta.jpg', desc: 'Great in taste', id: 'i3', name: 'Pasta', price: 15, quantity: 2, rating: 0, status: true, uid: 'r1', variation: false, veg: false}
           ],
           paid: 'COD',
           restaurant: {address: '9 Oak House, Genève', city: '909090271', closeTime: '20:00', cover: 'assets/imgs/restaurant-1.jpg', cuisines: ['Italian', 'Mexican'], deliveryTime: 25, description: 'dd', email: 'stay@fit.com', id: 'r1', isClose: true, latitude: 46.2013573, longitude: 6.1575619, name: 'Stayfit', openTime: '08:00', phone: 786745745, price: 25, rating: 0, shortName: 'stayfit', status: 'open', totalRating: 0},    restaurantId: 'r1',
