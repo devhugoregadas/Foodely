@@ -23,14 +23,22 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () => import('./account/account.module').then( m => m.AccountPageModule)
+      },
+      {
+        path: '',
+        redirectTo: '/tabs/home',
+        pathMatch: 'full'
       }
     ]
   },
   {
-    path: '',
-    redirectTo: '/tabs/home',
-    pathMatch: 'full'
-  }
+    path: 'restaurants/:restaurant_Id', // Fetch & Hold the restaurant ID
+    loadChildren: () => import('./items/items.module').then( m => m.ItemsPageModule)
+  },
+  {
+    path: 'address',
+    loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
+  },
 ];
 
 @NgModule({
