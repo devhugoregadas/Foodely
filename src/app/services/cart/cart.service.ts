@@ -1,9 +1,10 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable @typescript-eslint/member-ordering */
-/* eslint-disable no-underscore-dangle */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { Cart } from 'src/app/models/cart.model';
+import { Item } from 'src/app/models/item.model';
+import { Order } from 'src/app/models/order.model';
+import { Restaurant } from 'src/app/models/restaurant.model';
 import { GlobalService } from '../global/global.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -12,16 +13,16 @@ import { StorageService } from '../storage/storage.service';
 })
 export class CartService {
 
-  model: any = {};
+  model = {} as Cart;
   deliveryCharge = 20;
-  private _cart = new BehaviorSubject<any>(null);
+  private _cart = new BehaviorSubject<Cart>(null);
 
   get cart() {
     return this._cart.asObservable();
   }
 
   constructor(
-    private storage: StorageService,
+    private storage: StorageService, 
     private global: GlobalService,
     private router: Router
   ) { }
@@ -31,7 +32,7 @@ export class CartService {
   }
 
   async getCartData() {
-    const data: any = await this.getCart();
+    let data: any = await this.getCart();
     console.log('data: ', data);
     if(data?.value) {
       this.model = await JSON.parse(data.value);
@@ -43,9 +44,9 @@ export class CartService {
 
   alertClearCart(index, items, data, order?) {
     this.global.showAlert(
-      order ?
-      'Would you like to reset your cart before re-ordering from this restaurant?'
-      :
+      order ? 
+      'Would you like to reset your cart before re-ordering from this restaurant?' 
+      : 
       'Your cart contain items from a different restaurant. Would you like to reset your cart before browsing the restaurant?',
       'Items already in Cart',
       [
@@ -60,17 +61,17 @@ export class CartService {
           text: 'Yes',
           handler: () => {
             this.clearCart();
-            this.model = {};
+            this.model = {} as Cart;
             if(order) {
               this.orderToCart(order);
-            } else {this.quantityPlus(index, items, data);}
+            } else this.quantityPlus(index, items, data);
           }
         }
       ]
-    );
+    )
   }
 
-  async orderToCart(order) {
+  async orderToCart(order: Order) {
     console.log('order: ', order);
     const data = {
       restaurant: order.restaurant,
@@ -84,22 +85,20 @@ export class CartService {
     this.router.navigate(['/', 'tabs', 'restaurants', order.restaurant_id]);
   }
 
-  async quantityPlus(index, items?, restaurant?) {
+  async quantityPlus(index, items?: Item[], restaurant?: Restaurant) {
     try {
       if(items) {
         console.log('model: ', this.model);
         this.model.items = [...items];
       }
       if(restaurant) {
-        this.model.restaurant = {};
-        this.model.restaurant = restaurant;
+        this.model.restaurant = restaurant; 
       }
       console.log('q plus: ', this.model.items[index]);
-      // this.model.items[index].quantity += 1;
-      if(!this.model.items[index].quantity || this.model.items[index].quantity === 0) {
+      if(!this.model.items[index].quantity || this.model.items[index].quantity == 0) {
         this.model.items[index].quantity = 1;
       } else {
-        this.model.items[index].quantity += 1; // this.model.items[index].quantity = this.model.items[index].quantity + 1
+        this.model.items[index].quantity += 1;
       }
       await this.calculate();
       this._cart.next(this.model);
@@ -109,10 +108,15 @@ export class CartService {
     }
   }
 
-  async quantityMinus(index) {
+  async quantityMinus(index, items?: Item[]) {
     try {
-      if(this.model.items[index].quantity !== 0) {
-        this.model.items[index].quantity -= 1; // this.model.items[index].quantity = this.model.items[index].quantity - 1
+      if(items) {
+        console.log('model: ', this.model);
+        this.model.items = [...items];
+      }
+      console.log('item: ', this.model.items[index]);
+      if(this.model.items[index].quantity && this.model.items[index].quantity !== 0) {
+        this.model.items[index].quantity -= 1;
       } else {
         this.model.items[index].quantity = 0;
       }
@@ -125,7 +129,7 @@ export class CartService {
   }
 
   async calculate() {
-    const item = this.model.items.filter(x => x.quantity > 0);
+    let item = this.model.items.filter(x => x.quantity > 0);
     this.model.items = item;
     this.model.totalPrice = 0;
     this.model.totalItem = 0;
@@ -133,17 +137,16 @@ export class CartService {
     this.model.grandTotal = 0;
     item.forEach(element => {
       this.model.totalItem += element.quantity;
-      this.model.totalPrice += (parseFloat(element.price) * parseFloat(element.quantity));
+      this.model.totalPrice += element.price * element.quantity;
     });
     this.model.deliveryCharge = this.deliveryCharge;
-    this.model.totalPrice = parseFloat(this.model.totalPrice).toFixed(2);
-    this.model.grandTotal = (parseFloat(this.model.totalPrice) + parseFloat(this.model.deliveryCharge)).toFixed(2);
-    if(this.model.totalItem === 0) {
+    this.model.grandTotal = this.model.totalPrice + this.model.deliveryCharge;
+    if(this.model.totalItem == 0) {
       this.model.totalItem = 0;
       this.model.totalPrice = 0;
       this.model.grandTotal = 0;
       await this.clearCart();
-      this.model = {};
+      this.model = {} as Cart;
     }
     console.log('cart: ', this.model);
   }
@@ -156,8 +159,8 @@ export class CartService {
   }
 
   saveCart(model?) {
-    if(model) {this.model = model;}
+    if(model) this.model = model;
     this.storage.setStorage('cart', JSON.stringify(this.model));
-    // this._cart.next(this.model);
   }
+
 }

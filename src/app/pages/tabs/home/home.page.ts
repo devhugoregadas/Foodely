@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
@@ -9,8 +10,8 @@ import { ApiService } from 'src/app/services/api/api.service';
 export class HomePage implements OnInit {
 
   banners: any[] = [];
-  restaurants: any[] = [];
-  isLoading = false;
+  restaurants: Restaurant[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private api: ApiService
@@ -18,11 +19,12 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    setTimeout(() => {
+    setTimeout(() => {  
       this.banners = this.api.banners;
       this.restaurants = this.api.restaurants;
       this.isLoading = false;
-    }, 2500);
+    }, 3000);
+    
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
@@ -15,8 +16,8 @@ export class SearchPage implements OnInit {
   };
   isLoading: boolean;
   query: any;
-  allRestaurants: any[] = [];
-  restaurants: any[] = [];
+  allRestaurants: Restaurant[] = [];
+  restaurants: Restaurant[] = [];
 
   constructor(
     private api: ApiService
@@ -36,12 +37,16 @@ export class SearchPage implements OnInit {
    */
 
   async onSearchChange(event) {
+    
+    console.log(event.detail.value);
     this.query = event.detail.value.toLowerCase();
     this.restaurants = [];
     if(this.query.length > 0) {
       this.isLoading = true;
-      setTimeout(async () => {
-        this.restaurants = await this.allRestaurants.filter((element: any) => element.shortName.includes(this.query));
+      setTimeout(async() => {
+        this.restaurants = await this.allRestaurants.filter((element: any) => {
+          return element.short_name.includes(this.query);
+        });
         console.log(this.restaurants);
         this.isLoading = false;
       }, 3000);

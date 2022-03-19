@@ -6,7 +6,7 @@ import { AlertController, LoadingController, ModalController, ToastController } 
 })
 export class GlobalService {
 
-  isLoading = false;
+  isLoading: boolean = false;
 
   constructor(
     private alertCtrl: AlertController,
@@ -23,7 +23,7 @@ export class GlobalService {
   showAlert(message: string, header?, buttonArray?) {
     this.alertCtrl.create({
       header: header ? header : 'Authentication failed',
-      message,
+      message: message,
       buttons: buttonArray ? buttonArray : ['Okay']
     })
     .then(alertEl => alertEl.present());
@@ -32,9 +32,9 @@ export class GlobalService {
   async showToast(msg, color, position, duration = 3000) {
     const toast = await this.toastCtrl.create({
       message: msg,
-      duration,
-      color,
-      position
+      duration: duration,
+      color: color,
+      position: position
     });
     toast.present();
   }
@@ -49,7 +49,7 @@ export class GlobalService {
 
   showLoader(msg?, spinner?) {
     // this.isLoading = true;
-    if(!this.isLoading) {this.setLoader();}
+    if(!this.isLoading) this.setLoader();
     return this.loadingCtrl.create({
       message: msg,
       spinner: spinner ? spinner : 'bubbles'
@@ -60,7 +60,7 @@ export class GlobalService {
             console.log('abort presenting');
           });
         }
-      });
+      })
     })
     .catch(e => {
       console.log('show loading error: ', e);
@@ -69,7 +69,7 @@ export class GlobalService {
 
   hideLoader() {
     // this.isLoading = false;
-    if(this.isLoading) {this.setLoader();}
+    if(this.isLoading) this.setLoader();
     return this.loadingCtrl.dismiss()
     .then(() => console.log('dismissed'))
     .catch(e => console.log('error hide loader: ', e));
@@ -80,11 +80,11 @@ export class GlobalService {
     await modal.present();
     const { data } = await modal.onWillDismiss();
     console.log(data);
-    if(data) {return data;}
+    if(data) return data;
   }
 
   modalDismiss(val?) {
-    const data: any = val ? val : null;
+    let data: any = val ? val : null;
     console.log('data', data);
     this.modalCtrl.dismiss(data);
   }
@@ -98,5 +98,5 @@ export class GlobalService {
     }
   }
 
-
+  
 }

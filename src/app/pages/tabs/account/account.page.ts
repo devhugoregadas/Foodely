@@ -1,6 +1,6 @@
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Order } from 'src/app/models/order.model';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { OrderService } from 'src/app/services/order/order.service';
 
@@ -9,33 +9,22 @@ import { OrderService } from 'src/app/services/order/order.service';
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage implements OnInit, OnDestroy {
 
   profile: any = {};
   isLoading: boolean;
-  orders = [];
+  orders: Order[] = [];
   ordersSub: Subscription;
 
   constructor(
     private orderService: OrderService,
     private cartService: CartService
-  ) { }
+    ) { }
 
   ngOnInit() {
     this.ordersSub = this.orderService.orders.subscribe(order => {
       console.log('order data: ', order);
-      if(order instanceof Array) {
-        this.orders = order;
-      } else {
-        if(order?.delete) {
-          this.orders = this.orders.filter(x => x.id !== order.id);
-        } else if(order?.update) {
-          const index = this.orders.findIndex(x => x.id === order.id);
-          this.orders[index] = order;
-        } else {
-          this.orders = this.orders.concat(order);
-        }
-      }
+      this.orders = order;
     }, e => {
       console.log(e);
     });
@@ -44,22 +33,22 @@ export class AccountPage implements OnInit {
 
   async getData() {
     this.isLoading = true;
-    setTimeout(async () => {
-      this.profile = {
+    setTimeout(async() => {
+      this.profile = {      
         name: 'Hugo Regadas',
-        phone: '=7676767676',
-        email: 'dev.hugoregadas@gmail.com'
+        phone: '7676767676',
+        email: 'dev.hugoregadas@gmail.com' 
       };
       await this.orderService.getOrders();
-      this.isLoading = false;
+      this.isLoading = false;      
     }, 3000);
   }
 
   logout() {}
 
-  async reorder(order) {
+  async reorder(order: Order) {
     console.log(order);
-    const data: any = await this.cartService.getCart();
+    let data = await this.cartService.getCart();
     console.log('data: ', data);
     if(data?.value) {
       this.cartService.alertClearCart(null, null, null, order);
@@ -73,8 +62,7 @@ export class AccountPage implements OnInit {
   }
 
   ngOnDestroy() {
-    if(this.ordersSub) {this.ordersSub.unsubscribe();}
+    if(this.ordersSub) this.ordersSub.unsubscribe();
   }
-
 
 }

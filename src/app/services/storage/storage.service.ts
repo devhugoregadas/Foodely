@@ -10,15 +10,15 @@ export class StorageService {
   constructor() { }
 
   setStorage(key, value) {
-    Storage.set({key, value});
+    Storage.set({key: key, value: value});
   }
 
   getStorage(key) {
-    return Storage.get({key});
+    return Storage.get({key: key});
   }
 
   removeStorage(key) {
-    Storage.remove({key});
+    Storage.remove({key: key});
   }
 
   clearStorage() {

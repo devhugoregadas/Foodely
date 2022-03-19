@@ -34,7 +34,7 @@
       <ion-list-header>
         <ion-label color="primary">PAST ORDERS</ion-label>
       </ion-list-header>
-      <ion-text class="ion-text-center" *ngIf="!orders || orders?.length === 0">
+      <ion-text class="ion-text-center" *ngIf="!orders || orders?.length == 0">
         <p>No Orders Placed Yet</p>
       </ion-text>
       <app-orders 

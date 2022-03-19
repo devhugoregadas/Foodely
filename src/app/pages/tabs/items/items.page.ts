@@ -1,24 +1,25 @@
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { take } from 'rxjs/operators';
-
+import { Restaurant } from 'src/app/models/restaurant.model';
+import { Category } from 'src/app/models/category.model';
+import { Item } from 'src/app/models/item.model';
 
 @Component({
   selector: 'app-items',
   templateUrl: './items.page.html',
   styleUrls: ['./items.page.scss'],
 })
-export class ItemsPage implements OnInit {
+export class ItemsPage implements OnInit, OnDestroy {
 
   id: any;
-  data: any = {};
-  items: any[] = [];
-  veg: boolean;
+  data = {} as Restaurant;
+  items: Item[] = [];
+  veg: boolean = false;
   isLoading: boolean;
   cartData: any = {};
   storedData: any = {};
@@ -26,11 +27,9 @@ export class ItemsPage implements OnInit {
     icon: 'fast-food-outline',
     title: 'No Menu Available'
   };
-  // restaurants: any[] = [];
-  categories: any[] = [];
-  allItems: any[] = [];
+  categories: Category[] = [];
+  allItems: Item[] = [];
   cartSub: Subscription;
-  // routeSub: Subscription;
 
   constructor(
     private navCtrl: NavController,
@@ -40,14 +39,14 @@ export class ItemsPage implements OnInit {
     private cartService: CartService
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
       console.log('route data: ', paramMap);
-      if(!paramMap.has('restaurantId')) {
+      if(!paramMap.has('restaurant_id')) {
         this.navCtrl.back();
         return;
       }
-      this.id = paramMap.get('restaurantId');
+      this.id = paramMap.get('restaurant_id');
       console.log('id: ', this.id);
     });
     this.cartSub = this.cartService.cart.subscribe(cart => {
@@ -56,46 +55,49 @@ export class ItemsPage implements OnInit {
       this.storedData = {};
       if(cart && cart?.totalItem > 0) {
         this.storedData = cart;
-        // this.cartData.items = this.storedData.items;
         this.cartData.totalItem = this.storedData.totalItem;
         this.cartData.totalPrice = this.storedData.totalPrice;
         if(cart?.restaurant?.uid === this.id) {
           this.allItems.forEach(element => {
             cart.items.forEach(element2 => {
-              if(element.id !== element2.id) {return;}
+              if(element.id != element2.id) return;
               element.quantity = element2.quantity;
             });
           });
           console.log('allitems: ', this.allItems);
           this.cartData.items = this.allItems.filter(x => x.quantity > 0);
-          if(this.veg === true) {this.items = this.allItems.filter(x => x.veg === true);}
-          else {this.items = [...this.allItems];}
+          if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
+          else this.items = [...this.allItems];
         } else {
-          this.allItems.forEach(element => {
+          this.allItems.forEach(element => {            
               element.quantity = 0;
           });
-          if(this.veg === true) {this.items = this.allItems.filter(x => x.veg === true);}
-          else {this.items = [...this.allItems];}
+          if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
+          else this.items = [...this.allItems];
         }
-      }
-    });
+      } 
+      
+    });    
     this.getItems();
   }
 
   async getItems() {
-    try {
+    try {      
       this.isLoading = true;
-      this.data = {};
+      this.data = {} as Restaurant;
       this.cartData = {};
       this.storedData = {};
-      setTimeout(async () => {
-        // this.categories = this.api.categories;
+      setTimeout(async() => {      
         this.allItems = this.api.allItems;
-        const data: any = this.api.restaurants1.filter(x => x.uid === this.id);
+        let data: any = this.api.restaurants1.filter(x => x.uid === this.id);
         this.data = data[0];
         this.categories = this.api.categories.filter(x => x.uid === this.id);
         this.allItems = this.api.allItems.filter(x => x.uid === this.id);
+        this.allItems.forEach((element, index) => {
+          this.allItems[index].quantity = 0;
+        });
         this.items = [...this.allItems];
+        console.log('items: ', this.items);
         console.log('restaurant: ', this.data);
         await this.cartService.getCartData();
         this.isLoading = false;
@@ -108,16 +110,16 @@ export class ItemsPage implements OnInit {
   vegOnly(event) {
     console.log(event.detail.checked);
     this.items = [];
-    if(event.detail.checked === true) {this.items = this.allItems.filter(x => x.veg === true);}
-    else {this.items = this.allItems;}
+    if(event.detail.checked == true) this.items = this.allItems.filter(x => x.veg === true);
+    else this.items = this.allItems;
     console.log('items: ', this.items);
   }
 
   quantityPlus(item) {
     const index = this.allItems.findIndex(x => x.id === item.id);
     console.log(index);
-    if(!this.allItems[index].quantity || this.allItems[index].quantity === 0) {
-      if(!this.storedData.restaurant || (this.storedData.restaurant && this.storedData.restaurant.uid === this.id)) {
+    if(!this.allItems[index].quantity || this.allItems[index].quantity == 0) {
+      if(!this.storedData.restaurant || (this.storedData.restaurant && this.storedData.restaurant.uid == this.id)) {
         console.log('index item: ', this.allItems);
         this.cartService.quantityPlus(index, this.allItems, this.data);
       } else {
@@ -126,12 +128,12 @@ export class ItemsPage implements OnInit {
       }
     } else {
       this.cartService.quantityPlus(index, this.allItems, this.data);
-    }
+    }  
   }
 
   quantityMinus(item) {
     const index = this.allItems.findIndex(x => x.id === item.id);
-    this.cartService.quantityMinus(index);
+    this.cartService.quantityMinus(index, this.allItems);
   }
 
   saveToCart() {
@@ -147,19 +149,18 @@ export class ItemsPage implements OnInit {
 
   async viewCart() {
     console.log('save cartdata: ', this.cartData);
-    if(this.cartData.items && this.cartData.items.length > 0) {await this.saveToCart();}
+    if(this.cartData.items && this.cartData.items.length > 0) await this.saveToCart();
     console.log('router url: ', this.router.url);
     this.router.navigate([this.router.url + '/cart']);
   }
 
   async ionViewWillLeave() {
     console.log('ionViewWillLeave ItemsPage');
-    if(this.cartData?.items && this.cartData?.items.length > 0) {await this.saveToCart();}
-    // if(this.routeSub) this.routeSub.unsubscribe();
+    if(this.cartData?.items && this.cartData?.items.length > 0) await this.saveToCart();
   }
 
   ngOnDestroy() {
-    if(this.cartSub) {this.cartSub.unsubscribe();}
+    if(this.cartSub) this.cartSub.unsubscribe();
   }
 
 }
