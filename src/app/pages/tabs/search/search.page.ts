@@ -16,7 +16,6 @@ export class SearchPage implements OnInit {
   isLoading: boolean;
   query: any;
   allRestaurants: any[] = [];
-
   restaurants: any[] = [];
 
   constructor(
@@ -43,6 +42,7 @@ export class SearchPage implements OnInit {
       this.isLoading = true;
       setTimeout(async () => {
         this.restaurants = await this.allRestaurants.filter((element: any) => element.shortName.includes(this.query));
+        console.log(this.restaurants);
         this.isLoading = false;
       }, 3000);
     }

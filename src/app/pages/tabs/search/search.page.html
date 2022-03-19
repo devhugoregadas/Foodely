@@ -21,10 +21,9 @@
       </ion-label>
     </ion-list-header>
     <app-restaurant 
-      *ngFor="let restaurant of restaurants" 
+      *ngFor="let restaurant of restaurants"
       [restaurant]="restaurant"
-      [routerLink]="['/', 'tabs','restaurants', restaurant.uid]"
-      ></app-restaurant>
+      [routerLink]="['/', 'tabs', 'restaurants', restaurant.uid]"></app-restaurant>
   </ion-list>
 
 </ion-content>

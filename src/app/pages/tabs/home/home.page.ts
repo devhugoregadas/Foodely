@@ -22,7 +22,7 @@ export class HomePage implements OnInit {
       this.banners = this.api.banners;
       this.restaurants = this.api.restaurants;
       this.isLoading = false;
-    }, 3000);
+    }, 2500);
   }
 
 }

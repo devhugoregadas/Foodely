@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Storage } from '@capacitor/storage';
-import { IonContent } from '@ionic/angular';
+import { IonContent, NavController } from '@ionic/angular';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs';
+import { CartService } from 'src/app/services/cart/cart.service';
+import { GlobalService } from 'src/app/services/global/global.service';
+import { OrderService } from 'src/app/services/order/order.service';
 
 @Component({
   selector: 'app-cart',
@@ -18,60 +21,34 @@ export class CartPage implements OnInit {
   deliveryCharge = 20;
   instruction: any;
   location: any = {};
+  cartSub: Subscription;
 
   constructor(
-    private router: Router
+    private navCtrl: NavController,
+    private router: Router,
+    private orderService: OrderService,
+    private global: GlobalService,
+    private cartService: CartService
   ) { }
 
   ngOnInit() {
-    this.checkUrl();
-    this.getModel();
-  }
-
-  getCart() {
-   return Storage.get({key: 'cart'});
-  }
-
-  async getModel() {
-    const data: any = await this.getCart();
-    this.location = {
-      lat: 28.653831,
-      lng: 77.188257,
-      address: 'Vernier, Genève'
-    };
-    if(data?.value) {
-      this.model = await JSON.parse(data.value);
-      console.log(this.model);
-      this.calculate();
-    }
-  }
-
-  async calculate() {
-    const item = this.model.items.filter(x => x.quantity > 0);
-    this.model.items = item;
-    this.model.totalPrice = 0;
-    this.model.totalItem = 0;
-    this.model.deliveryCharge = 0;
-    this.model.grandTotal = 0;
-    item.forEach(element => {
-      this.model.totalItem += element.quantity;
-      this.model.totalPrice += (parseFloat(element.price) * parseFloat(element.quantity));
+    this.cartSub = this.cartService.cart.subscribe(cart => {
+      console.log('cart page: ', cart);
+      this.model = cart;
+      if(!this.model) {this.location = {};}
+      console.log('cart page model: ', this.model);
     });
-    this.model.deliveryCharge = this.deliveryCharge;
-    this.model.totalPrice = parseFloat(this.model.totalPrice).toFixed(2);
-    this.model.grandTotal = (parseFloat(this.model.totalPrice) + parseFloat(this.model.deliveryCharge)).toFixed(2);
-    if(this.model.totalItem === 0) {
-      this.model.totalItem = 0;
-      this.model.totalPrice = 0;
-      this.model.grandTotal = 0;
-      await this.clearCart();
-      this.model = null;
-    }
-    console.log('cart: ', this.model);
+    this.getData();
   }
 
-  clearCart() {
-    return Storage.remove({key: 'cart'});
+  async getData() {
+    await this.checkUrl();
+    this.location = {
+      lat: 46.2122638,
+      lng: 6.1052686,
+      address: 'Route de Vernier, Genève'
+    };
+    await this.cartService.getCartData();
   }
 
   checkUrl() {
@@ -79,8 +56,10 @@ export class CartPage implements OnInit {
     console.log('url: ', url);
     const spliced = url.splice(url.length - 2, 2); // /tabs/cart url.length - 1 - 1
     this.urlCheck = spliced[0];
+    console.log('urlcheck: ', this.urlCheck);
     url.push(this.urlCheck);
     this.url = url;
+    console.log(this.url);
   }
 
   getPreviousUrl() {
@@ -88,35 +67,22 @@ export class CartPage implements OnInit {
   }
 
   quantityPlus(index) {
-    try {
-      console.log(this.model.items[index]);
-      if(!this.model.items[index].quantity || this.model.items[index].quantity === 0) {
-        this.model.items[index].quantity = 1;
-        this.calculate();
-      } else {
-        this.model.items[index].quantity += 1; // this.model.items[index].quantity = this.model.items[index].quantity + 1
-        this.calculate();
-      }
-    } catch(e) {}
+    this.cartService.quantityPlus(index);
   }
 
   quantityMinus(index) {
-    if(this.model.items[index].quantity !== 0) {
-      this.model.items[index].quantity -= 1; // this.model.items[index].quantity = this.model.items[index].quantity - 1
-    } else {
-      this.model.items[index].quantity = 0;
-    }
-    this.calculate();
+    this.cartService.quantityMinus(index);
   }
 
   addAddress() {}
 
   changeAddress() {}
 
-  makePayment() {
+  async makePayment() {
     try {
       const data = {
         restaurantId: this.model.restaurant.uid,
+        instruction: this.instruction ? this.instruction : '',
         res: this.model.restaurant,
         order: JSON.stringify(this.model.items),
         time: moment().format('lll'),
@@ -127,12 +93,26 @@ export class CartPage implements OnInit {
         status: 'Created',
         paid: 'COD'
       };
+      console.log('order: ', data);
+      await this.orderService.placeOrder(data);
+      // clear cart
+      await this.cartService.clearCart();
+      this.global.successToast('Your Order is Placed Successfully');
+      this.navCtrl.navigateRoot(['tabs/account']);
     } catch(e) {
+      console.log(e);
     }
   }
 
   scrollToBottom() {
     this.content.scrollToBottom(500);
+  }
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave CartPage');
+    if(this.model?.items && this.model?.items.length > 0) {
+      this.cartService.saveCart();
+    }
   }
 
 }

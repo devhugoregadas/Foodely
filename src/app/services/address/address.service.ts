@@ -1,17 +1,41 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { ApiService } from '../api/api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddressService {
 
-  constructor() { }
+  private _addresses = new BehaviorSubject<any>(null);
 
-  getAddresses() {}
+  get addresses() {
+    return this._addresses.asObservable();
+  }
 
-  async addAdress(param) {}
+  constructor(
+    private api: ApiService) { }
 
-  async updateAddress(id, param) {}
+  getAddresses() {
+    try {
+      //user id
+      const allAddress: any[] = this.api.addresses;
+      console.log(allAddress);
+      this._addresses.next(allAddress);
+    } catch(e) {
+      console.log(e);
+      throw(e);
+    }
+  }
 
-  async deleteAddress(id) {}
+  addAddress(param) {}
+
+  updateAddress(id, param) {}
+
+  deleteAddress(param) {
+    param.delete = true;
+    this._addresses.next(param);
+  }
 }
