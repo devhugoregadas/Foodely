@@ -42,11 +42,11 @@ export class ItemsPage implements OnInit, OnDestroy {
   ngOnInit() {    
     this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
       console.log('route data: ', paramMap);
-      if(!paramMap.has('restaurant_id')) {
+      if(!paramMap.has('restaurantId')) {
         this.navCtrl.back();
         return;
       }
-      this.id = paramMap.get('restaurant_id');
+      this.id = paramMap.get('restaurantId');
       console.log('id: ', this.id);
     });
     this.cartSub = this.cartService.cart.subscribe(cart => {

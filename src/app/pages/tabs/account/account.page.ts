@@ -37,7 +37,7 @@ export class AccountPage implements OnInit, OnDestroy {
       this.profile = {      
         name: 'Hugo Regadas',
         phone: '7676767676',
-        email: 'dev.hugoregadas@gmail.com' 
+        email: 'dev.hugoregadas@gmail.com'  
       };
       await this.orderService.getOrders();
       this.isLoading = false;      

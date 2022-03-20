@@ -19,9 +19,7 @@ export class SearchPage implements OnInit {
   allRestaurants: Restaurant[] = [];
   restaurants: Restaurant[] = [];
 
-  constructor(
-    private api: ApiService
-  ) { }
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -30,14 +28,12 @@ export class SearchPage implements OnInit {
     }, 500);
   }
 
-
-  /**
+    /**
    *
    * @param onSearchChange method to search the object on the object array allRestaurants
    */
 
   async onSearchChange(event) {
-    
     console.log(event.detail.value);
     this.query = event.detail.value.toLowerCase();
     this.restaurants = [];

@@ -46,12 +46,6 @@ export class CartPage implements OnInit {
 
   async getData() {
     await this.checkUrl();
-    // this.location = {
-    //   lat: 28.653831, 
-    //   lng: 77.188257, 
-    //   address: 'Karol Bagh, New Delhi',
-    //   user_id: 'user1',
-    // };
     this.location = new Address(
       'address1',
       'user1',

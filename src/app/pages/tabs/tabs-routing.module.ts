@@ -32,13 +32,14 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'restaurants/:restaurant_Id', // Fetch & Hold the restaurant ID
+    path: 'restaurants/:restaurantId',
     loadChildren: () => import('./items/items.module').then( m => m.ItemsPageModule)
   },
   {
     path: 'address',
     loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
   },
+  
 ];
 
 @NgModule({

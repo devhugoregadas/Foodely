@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-banner',
@@ -7,11 +7,11 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class BannerComponent implements OnInit {
 
-
-  @Input() bannerImages: any[] = [];
+  @Input() bannerImages: any[];
   slideOptions = {
-    slidesPerView: 1.1 // To show the a portion of the next slide.
+    slidesPerView: 1.1
   };
+
 
   constructor() { }
 
