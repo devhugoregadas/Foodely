@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy:ci": "ng deploy --base-href=/foodely/ --name=devhugoregadas --email=devhugoregadas@gmail.com --no-silent"
+    "deploy:ci": "ng deploy --base-href=/foodely/ --name=devhugoregadas --email=devhugoregadas@gmail.com --no-silent",
+    "deploy:ftp": "ng build --base-href=/foodely/ && node deploy-ftp.js"
   },
   "private": true,
   "dependencies": {
@@ -34,6 +35,7 @@
     "@ionic/angular": "^6.0.0",
     "@ionic/pwa-elements": "^3.1.1",
     "firebase": "^9.6.10",
+    "ftp-deploy": "^2.4.1",
     "geofirestore": "^5.0.0",
     "moment": "^2.29.1",
     "rxjs": "~6.6.0",
