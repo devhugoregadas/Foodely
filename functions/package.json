@@ -7,7 +7,8 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "deploy:ci": "ng deploy --base-href=/foodely/ --name=devhugoregadas --email=devhugoregadas@gmail.com --no-silent"
   },
   "engines": {
     "node": "16"
