@@ -6,6 +6,7 @@ export class Order {
     constructor(
         public address: Address,
         public restaurant: Restaurant,
+        public user: any,
         public restaurant_id: string,
         public order: Item[],
         public total: number,
@@ -15,7 +16,7 @@ export class Order {
         public time: string,
         public paid: string,
         public id?: string,
-        public user_id?: string,
+        public uid?: string,
         public instruction?: string,
     ) {}
 }

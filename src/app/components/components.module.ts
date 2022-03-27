@@ -4,24 +4,25 @@ import { RestaurantComponent } from './restaurant/restaurant.component';
 import { IonicModule } from '@ionic/angular';
 import { LoadingRestaurantComponent } from './loading-restaurant/loading-restaurant.component';
 import { EmptyScreenComponent } from './empty-screen/empty-screen.component';
+import { SearchLocationComponent } from './search-location/search-location.component';
 
-
+export const components = [
+  RestaurantComponent,
+  LoadingRestaurantComponent,
+  EmptyScreenComponent,
+  SearchLocationComponent
+];
 
 @NgModule({
-  declarations: [
-    RestaurantComponent,
-    LoadingRestaurantComponent,
-    EmptyScreenComponent
-  ],
+  declarations: components,
   imports: [
     CommonModule,
     IonicModule
   ],
-  exports: [
-    RestaurantComponent,
-    LoadingRestaurantComponent,
-    EmptyScreenComponent
-  ],
-  entryComponents: []
+  exports: components,
+  // only those components not defined in template
+  entryComponents: [
+    SearchLocationComponent
+  ]
 })
 export class ComponentsModule { }

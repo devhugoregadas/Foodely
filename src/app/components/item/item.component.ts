@@ -8,6 +8,7 @@ import { Item } from 'src/app/models/item.model';
 })
 export class ItemComponent implements OnInit {
 
+  fallbackImage = 'assets/imgs/1.jpg';
   @Input() item: Item;
   @Input() index;
   @Output() add: EventEmitter<Item> = new EventEmitter();
@@ -16,6 +17,10 @@ export class ItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {}
+
+  onImgError(event) {
+    event.target.src = this.fallbackImage;
+  }
 
   quantityPlus() {
     this.add.emit(this.item);

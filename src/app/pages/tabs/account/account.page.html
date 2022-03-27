@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-title>My Account</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="logout()">
+      <ion-button fill="clear" (click)="confirmLogout()">
         <ion-icon name="power-outline" color="white" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,7 +18,7 @@
   <ng-container *ngIf="!isLoading">
     <ion-list class="borderBottom">
       <ion-item lines="full">
-        <ion-button slot="end" fill="clear">EDIT</ion-button>
+        <ion-button slot="end" fill="clear" (click)="editProfile()">EDIT</ion-button>
         <ion-label>
           <ion-text class="ion-text-uppercase"><h4>{{profile?.name}}</h4></ion-text>
           <p>{{profile?.phone}} | {{profile?.email}}</p>

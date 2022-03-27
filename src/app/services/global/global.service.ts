@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { isPlatform } from '@ionic/angular';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +18,15 @@ export class GlobalService {
     private modalCtrl: ModalController
   ) { }
 
-
   setLoader() {
     this.isLoading = !this.isLoading;
   }
 
-  showAlert(message: string, header?, buttonArray?) {
+  showAlert(message: string, header?, buttonArray?, inputs?) {
     this.alertCtrl.create({
       header: header ? header : 'Authentication failed',
       message: message,
+      inputs: inputs ? inputs : [],
       buttons: buttonArray ? buttonArray : ['Okay']
     })
     .then(alertEl => alertEl.present());
@@ -96,5 +99,11 @@ export class GlobalService {
     }
   }
 
+  async customStatusbar(primaryColor?: boolean) {
+    if(Capacitor.getPlatform() != 'web') {
+      await StatusBar.setStyle({ style: primaryColor ? Style.Dark : Style.Light });
+      if(isPlatform('android')) StatusBar.setBackgroundColor({color : primaryColor ? '#de0f17' : '#ffffff'});
+    }
+  }
   
 }

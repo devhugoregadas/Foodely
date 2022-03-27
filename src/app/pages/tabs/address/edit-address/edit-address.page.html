@@ -2,27 +2,30 @@
 
   <ion-toolbar slot="fixed">
     <ion-buttons slot="start" mode="md">
-      <ion-back-button defaultHref="/tabs/address"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/address" color="dark"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 
-  <div>
-    <app-map></app-map>
+  <div *ngIf="isLoading" class="ion-text-center alignSpinner">
+    <ion-spinner color="primary"></ion-spinner>
   </div>
 
-  <form [formGroup]="form">
+  <div class="map" *ngIf="!isLoading">
+    <app-map [center]="center" [update]="update" (location)="fetchLocation($event)"></app-map>
+  </div>
+
+  <form [formGroup]="form" *ngIf="!isLoading">
     <ion-list>
       <ion-item lines="none">
         <ion-icon name="location-outline" color="dark" slot="start"></ion-icon>
-        <ion-label>{{location_name}}</ion-label>
-        <ion-button slot="end" size="small" color="light">
+        <ion-label>{{location?.title}}</ion-label>
+        <ion-button slot="end" size="small" color="light" (click)="searchLocation()">
           <span>CHANGE</span>
         </ion-button>
       </ion-item>
-      <ion-row class="ion-padding-horizontal">
+      <ion-row class="ion-padding-horizontal ion-text-justify">
         <ion-note class="ion-text-wrap ion-padding-horizontal">
-          Lorem ipsum dolor sit amet, 
-          consectetur adipiscing elit. Duis sit amet nunc porttitor urna hendrerit commodo sed ac justo
+          {{location?.address}}
         </ion-note>
       </ion-row>
       <ion-item-group class="ion-padding">

@@ -2,16 +2,16 @@ export class Item {
     
     constructor(
         public id: string,
-        public category_id: string,
         public uid: string,
+        public category_id: any,
         public cover: string,
         public name: string,
         public desc: string,
         public price: number,
-        public rating: number,
+        public veg: boolean,
         public status: boolean,
         public variation: boolean,
-        public veg: boolean,
+        public rating: number,
         public quantity?: number
     ) {}
 

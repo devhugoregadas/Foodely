@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Address } from 'src/app/models/address.model';
 import { AddressService } from 'src/app/services/address/address.service';
@@ -21,7 +22,8 @@ export class AddressPage implements OnInit, OnDestroy {
 
   constructor(
     private global: GlobalService,
-    private addressService: AddressService) { }
+    private addressService: AddressService,
+    private router: Router) { }
 
   ngOnInit() {
     this.addressesSub = this.addressService.addresses.subscribe(address => {
@@ -31,15 +33,25 @@ export class AddressPage implements OnInit, OnDestroy {
     this.getAddresses();
   }
 
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter AddressPage');
+    this.global.customStatusbar();
+  }
+
   async getAddresses() {    
-    this.isLoading = true;
-    this.global.showLoader();
-    setTimeout(async() => {
+    try {
+      this.isLoading = true;
+      this.global.showLoader();
       await this.addressService.getAddresses();
       console.log(this.addresses);
       this.isLoading = false;
       this.global.hideLoader();
-    }, 3000);
+    } catch(e) {
+      console.log(e);
+      this.isLoading = false;
+      this.global.hideLoader();
+      this.global.errorToast();
+    }
   }
 
   getIcon(title) {
@@ -47,7 +59,13 @@ export class AddressPage implements OnInit, OnDestroy {
   }
 
   editAddress(address) {
-
+    console.log(address);
+    const navData: NavigationExtras = {
+      queryParams: {
+        data: JSON.stringify(address)
+      }
+    };
+    this.router.navigate([this.router.url, 'edit-address'], navData);
   }
 
   deleteAddress(address) {

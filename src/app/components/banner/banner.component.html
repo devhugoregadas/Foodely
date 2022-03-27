@@ -1,7 +1,11 @@
-<div class="borderBottom" *ngIf="bannerImages.length > 0">
-  <ion-slides pager="true" [options]="slideOptions">
-    <ion-slide *ngFor="let image of bannerImages">
-      <div [ngStyle]="{'background-image':'url(' + image.banner + ')'}"></div>
-    </ion-slide>
-  </ion-slides>
-</div>
+<swiper 
+  *ngIf="bannerImages.length > 0" 
+  class="borderBottom"
+  [config]="slideOptions">
+  <ng-template 
+    swiperSlide 
+    *ngFor="let image of bannerImages" 
+    (click)="goToRestaurant(image)">
+    <div [ngStyle]="{'background-image':'url(' + image.banner + ')'}"></div>
+  </ng-template>
+</swiper>

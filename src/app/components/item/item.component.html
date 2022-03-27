@@ -1,11 +1,12 @@
+
 <ion-item>
   <ion-thumbnail slot="start">
-    <img [src]="item?.cover ? item.cover : 'assets/imgs/1.jpg'" />
+    <img [src]="item?.cover ? item?.cover : fallbackImage" (error)="onImgError($event)" />
   </ion-thumbnail>
-  <ion-label>
-    {{item?.name}}
-    <p class="ion-text-wrap">{{item?.desc}}</p>
-    <ion-text><p>CHF{{item?.price | number: '0.2-2'}}</p></ion-text>
+  <ion-label class="ion-text-wrap">
+    <ion-text>{{item?.name}}</ion-text>
+    <p>{{item?.desc}}</p>
+    <ion-text><p>CHF {{item?.price | number: '0.2-2'}}</p></ion-text>
   </ion-label>
   <ion-row *ngIf="!item?.quantity || item?.quantity <= 0" (click)="quantityPlus()">
     <ion-text class="add" color="success">Add</ion-text>

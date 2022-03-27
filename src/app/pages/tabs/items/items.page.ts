@@ -2,12 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ApiService } from 'src/app/services/api/api.service';
 import { CartService } from 'src/app/services/cart/cart.service';
-import { take } from 'rxjs/operators';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
+import { GlobalService } from 'src/app/services/global/global.service';
+import { Cart } from 'src/app/interfaces/cart.interface';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { MenuService } from 'src/app/services/menu/menu.service';
 
 @Component({
   selector: 'app-items',
@@ -21,8 +24,8 @@ export class ItemsPage implements OnInit, OnDestroy {
   items: Item[] = [];
   veg: boolean = false;
   isLoading: boolean;
-  cartData: any = {};
-  storedData: any = {};
+  cartData = {} as Cart;
+  storedData = {} as Cart;
   model = {
     icon: 'fast-food-outline',
     title: 'No Menu Available'
@@ -35,34 +38,43 @@ export class ItemsPage implements OnInit, OnDestroy {
     private navCtrl: NavController,
     private route: ActivatedRoute,
     private router: Router,
-    private api: ApiService,
-    private cartService: CartService
+    private cartService: CartService,
+    private global: GlobalService,
+    private restaurantService: RestaurantService,
+    private menuService: MenuService,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {    
-    this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
-      console.log('route data: ', paramMap);
-      if(!paramMap.has('restaurantId')) {
-        this.navCtrl.back();
-        return;
-      }
-      this.id = paramMap.get('restaurantId');
-      console.log('id: ', this.id);
-    });
+    const id = this.route.snapshot.paramMap.get('restaurantId');
+    console.log('check id: ', id);
+    if(!id) {
+      this.navCtrl.back();
+      return;
+    } 
+    this.id = id;
+    console.log('id: ', this.id);
     this.cartSub = this.cartService.cart.subscribe(cart => {
       console.log('cart items: ', cart);
-      this.cartData = {};
-      this.storedData = {};
+      this.cartData = {} as Cart;
+      this.storedData = {} as Cart;
       if(cart && cart?.totalItem > 0) {
         this.storedData = cart;
         this.cartData.totalItem = this.storedData.totalItem;
         this.cartData.totalPrice = this.storedData.totalPrice;
         if(cart?.restaurant?.uid === this.id) {
           this.allItems.forEach(element => {
+            let qty = false;
             cart.items.forEach(element2 => {
-              if(element.id != element2.id) return;
+              if(element.id != element2.id) {
+
+                return;
+              }
               element.quantity = element2.quantity;
+              qty = true;              
             });
+            console.log(`element checked (${qty}): `, element?.name + ' | ' + element?.quantity);
+            if(!qty && element?.quantity) element.quantity = 0;
           });
           console.log('allitems: ', this.allItems);
           this.cartData.items = this.allItems.filter(x => x.quantity > 0);
@@ -75,8 +87,13 @@ export class ItemsPage implements OnInit, OnDestroy {
           if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
           else this.items = [...this.allItems];
         }
-      } 
-      
+      } else {
+        this.allItems.forEach(element => {            
+          element.quantity = 0;
+        });
+        if(this.veg == true) this.items = this.allItems.filter(x => x.veg === true);
+        else this.items = [...this.allItems];
+      }
     });    
     this.getItems();
   }
@@ -85,25 +102,20 @@ export class ItemsPage implements OnInit, OnDestroy {
     try {      
       this.isLoading = true;
       this.data = {} as Restaurant;
-      this.cartData = {};
-      this.storedData = {};
-      setTimeout(async() => {      
-        this.allItems = this.api.allItems;
-        let data: any = this.api.restaurants1.filter(x => x.uid === this.id);
-        this.data = data[0];
-        this.categories = this.api.categories.filter(x => x.uid === this.id);
-        this.allItems = this.api.allItems.filter(x => x.uid === this.id);
-        this.allItems.forEach((element, index) => {
-          this.allItems[index].quantity = 0;
-        });
-        this.items = [...this.allItems];
-        console.log('items: ', this.items);
-        console.log('restaurant: ', this.data);
-        await this.cartService.getCartData();
-        this.isLoading = false;
-      }, 3000);
+      this.cartData = {} as Cart;
+      this.storedData = {} as Cart;
+      this.data = await this.restaurantService.getRestaurantById(this.id);
+      this.categories = await this.categoryService.getRestaurantCategories(this.id);
+      this.allItems = await this.menuService.getRestaurantMenu(this.id);
+      this.items = [...this.allItems];
+      console.log('items: ', this.items);
+      console.log('restaurant: ', this.data);
+      await this.cartService.getCartData();
+      this.isLoading = false;
     } catch(e) {
       console.log(e);
+      this.isLoading = false;
+      this.global.errorToast();
     }
   }
 
@@ -138,7 +150,7 @@ export class ItemsPage implements OnInit, OnDestroy {
 
   saveToCart() {
     try {
-      this.cartData.restaurant = {};
+      this.cartData.restaurant = {} as Restaurant;
       this.cartData.restaurant = this.data;
       console.log('save cartData: ', this.cartData);
       this.cartService.saveCart();
@@ -152,6 +164,12 @@ export class ItemsPage implements OnInit, OnDestroy {
     if(this.cartData.items && this.cartData.items.length > 0) await this.saveToCart();
     console.log('router url: ', this.router.url);
     this.router.navigate([this.router.url + '/cart']);
+  }
+
+  checkItemCategory(id) {
+    const item = this.items.find(x => x.category_id.id == id);
+    if(item) return true;
+    return false;
   }
 
   async ionViewWillLeave() {

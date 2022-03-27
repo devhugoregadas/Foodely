@@ -3,10 +3,19 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  googleMapsApiKey: 'AIzaSyBl6qBa0AB10rnu3Da4mCJyaLwzzXcIaRA'
-};
-
+  firebase: {
+     projectId: 'foodely',
+     appId: '1:690076438465:web:2c819972a71e3575922940',
+     storageBucket: 'foodely.appspot.com',
+     locationId: '',
+     apiKey: 'AIzaSyBp4y47TmE5Q7PQSOHuB6srFSVd4z-2ZzY',
+     authDomain: 'foodely.firebaseapp.com',
+     messagingSenderId: '690076438465',
+     measurementId: 'G-S0K5XLS03L',
+   },
+   googleMapsApiKey: 'AIzaSyBQ2zIaeVYCkkUy-YsD7GDdyCdYkTdIkhM',
+   production: false
+ };
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

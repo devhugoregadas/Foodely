@@ -12,8 +12,7 @@ export class OrdersComponent implements OnInit {
   @Output() reorder: EventEmitter<any> = new EventEmitter();
   @Output() help: EventEmitter<any> = new EventEmitter();
 
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
 

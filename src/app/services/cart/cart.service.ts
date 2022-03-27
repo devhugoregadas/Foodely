@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { Cart } from 'src/app/models/cart.model';
+import { Cart } from 'src/app/interfaces/cart.interface';
 import { Item } from 'src/app/models/item.model';
 import { Order } from 'src/app/models/order.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
@@ -31,14 +31,14 @@ export class CartService {
     return this.storage.getStorage('cart');
   }
 
-  async getCartData() {
+  async getCartData(val?) {
     let data: any = await this.getCart();
     console.log('data: ', data);
     if(data?.value) {
       this.model = await JSON.parse(data.value);
       console.log('model: ', this.model);
       await this.calculate();
-      this._cart.next(this.model);
+      if(!val) this._cart.next(this.model);
     }
   }
 
@@ -60,15 +60,19 @@ export class CartService {
         {
           text: 'Yes',
           handler: () => {
-            this.clearCart();
-            this.model = {} as Cart;
-            if(order) {
-              this.orderToCart(order);
-            } else this.quantityPlus(index, items, data);
+            this.clear(index, items, data, order);
           }
         }
       ]
-    )
+    );
+  }
+
+  async clear(index, items, data, order?) {
+    await this.clearCart();
+    this.model = {} as Cart;
+    if(order) {
+      this.orderToCart(order);
+    } else this.quantityPlus(index, items, data);
   }
 
   async orderToCart(order: Order) {
@@ -89,7 +93,8 @@ export class CartService {
     try {
       if(items) {
         console.log('model: ', this.model);
-        this.model.items = [...items];
+        this.model.items = [...items];      
+        if(this.model.from) this.model.from = '';
       }
       if(restaurant) {
         this.model.restaurant = restaurant; 
@@ -100,8 +105,10 @@ export class CartService {
       } else {
         this.model.items[index].quantity += 1;
       }
+      console.log('check cart: ', this.model.items);
       await this.calculate();
       this._cart.next(this.model);
+      return this.model;
     } catch(e) {
       console.log(e);
       throw(e);
@@ -112,7 +119,10 @@ export class CartService {
     try {
       if(items) {
         console.log('model: ', this.model);
-        this.model.items = [...items];
+        this.model.items = [...items];        
+        if(this.model.from) this.model.from = '';
+      } else {
+        this.model.from = 'cart';
       }
       console.log('item: ', this.model.items[index]);
       if(this.model.items[index].quantity && this.model.items[index].quantity !== 0) {
@@ -122,6 +132,7 @@ export class CartService {
       }
       await this.calculate();
       this._cart.next(this.model);
+      return this.model;
     } catch(e) {
       console.log(e);
       throw(e);
@@ -130,6 +141,7 @@ export class CartService {
 
   async calculate() {
     let item = this.model.items.filter(x => x.quantity > 0);
+    console.log('model check qty: ', item);
     this.model.items = item;
     this.model.totalPrice = 0;
     this.model.totalItem = 0;
@@ -161,6 +173,42 @@ export class CartService {
   saveCart(model?) {
     if(model) this.model = model;
     this.storage.setStorage('cart', JSON.stringify(this.model));
+  }
+
+  deg2rad(deg) {
+    return deg * (Math.PI/180);
+  }
+
+  getDistanceFromLatLngInKm(lat1, lng1, lat2, lng2) {
+    // 1mile = 1.6 km;
+    let radius = 6371; // Radius of earth in km
+    let lat = this.deg2rad(lat2 - lat1);
+    let lng = this.deg2rad(lng2 - lng1);
+
+    let result = Math.sin(lat/2) * Math.sin(lat/2) +
+                  Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+                  Math.sin(lng/2) * Math.sin(lng/2);
+                  var c = 2 * Math.atan2(Math.sqrt(result), Math.sqrt(1-result)); 
+                  var d = radius * c; // Distance in km
+                  console.log(d);
+                  return d;
+  }
+
+  async checkCart(lat1, lng1, radius) {
+    let distance: number;
+    await this.getCartData(1);
+    if(this.model?.restaurant) {
+      distance = this.getDistanceFromLatLngInKm(
+        lat1, 
+        lng1, 
+        this.model.restaurant.g.geopoint.latitude, 
+        this.model.restaurant.g.geopoint.longitude
+        );
+        console.log('distance: ', distance);
+        if(distance > radius) {
+          return true;
+        } else return false;
+    } else return false;
   }
 
 }
