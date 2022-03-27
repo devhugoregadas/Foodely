@@ -78,7 +78,7 @@ export class GoogleMapsService {
       service.getPlacePredictions({
         input: query,
         componentRestrictions: {
-          country: 'IN'
+          country: 'CH'
         }
       }, (predictions) => {
         let autoCompleteItems = [];

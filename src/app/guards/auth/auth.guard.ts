@@ -56,7 +56,7 @@ export class AuthGuard implements CanLoad {
   showAlert(role) {
     this.alertCtrl.create({
       header: 'Authentication Failed',
-      message: 'Please check your Internet Connectivity and tr again',
+      message: 'Please check your Internet Connectivity and try again',
       buttons: [
         {
           text: 'Logout',
