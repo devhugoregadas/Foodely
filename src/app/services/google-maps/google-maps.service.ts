@@ -108,7 +108,7 @@ export class GoogleMapsService {
 
   geoCode(address, googleMaps) {
     let latlng = {lat: '', lng: ''};
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let geocoder = new googleMaps.Geocoder();
       geocoder.geocode({'address' : address}, (results) => {
         console.log('results: ', results);
