@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { switchMap } from 'rxjs/operators';
 import { Item } from 'src/app/models/item.model';
 import { ApiService } from '../api/api.service';
 
@@ -29,7 +28,7 @@ export class MenuService {
         false,
         0
       );
-      let itemData = Object.assign({}, item);
+      const itemData = Object.assign({}, item);
       delete itemData.quantity;
       console.log(itemData);
       const result = await this.api.setDocument(`menu/${data.restaurant_id}/allItems/${id}`, itemData);

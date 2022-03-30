@@ -13,7 +13,7 @@ export class RestaurantService {
 
   async addRestaurant(data: any, uid) {
     try {
-      let restaurant = Object.assign({}, data);
+      const restaurant = Object.assign({}, data);
       delete restaurant.g;
       delete restaurant.distance;
       console.log(restaurant);

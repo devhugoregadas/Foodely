@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-// import { switchMap } from 'rxjs/operators';
 import { Order } from 'src/app/models/order.model';
 import { ApiService } from '../api/api.service';
 import { AuthService } from '../auth/auth.service';

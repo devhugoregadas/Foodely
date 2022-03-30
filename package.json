@@ -35,7 +35,7 @@
     "@ionic/angular": "^6.0.0",
     "@ionic/pwa-elements": "^3.1.1",
     "firebase": "^9.6.10",
-    "ftp-deploy": "^2.4.1",
+    "ftp-deploy": "^2.3.8",
     "geofirestore": "^5.0.0",
     "moment": "^2.29.1",
     "rxjs": "~6.6.0",

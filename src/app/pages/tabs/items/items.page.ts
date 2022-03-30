@@ -12,6 +12,7 @@ import { RestaurantService } from 'src/app/services/restaurant/restaurant.servic
 import { CategoryService } from 'src/app/services/category/category.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
 
+
 @Component({
   selector: 'app-items',
   templateUrl: './items.page.html',
@@ -67,7 +68,6 @@ export class ItemsPage implements OnInit, OnDestroy {
             let qty = false;
             cart.items.forEach(element2 => {
               if(element.id != element2.id) {
-
                 return;
               }
               element.quantity = element2.quantity;
@@ -112,11 +112,12 @@ export class ItemsPage implements OnInit, OnDestroy {
       console.log('restaurant: ', this.data);
       await this.cartService.getCartData();
       this.isLoading = false;
-    } catch(e) {
-      console.log(e);
-      this.isLoading = false;
-      this.global.errorToast();
-    }
+    } 
+      catch(e) {
+        console.log(e);
+        this.isLoading = false;
+        this.global.errorToast();
+      }
   }
 
   vegOnly(event) {

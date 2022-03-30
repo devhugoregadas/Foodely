@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
 import { Banner } from 'src/app/models/banner.model';
 import { ApiService } from '../api/api.service';
 
