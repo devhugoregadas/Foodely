@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+// import { switchMap } from 'rxjs/operators';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from '../api/api.service';
 
@@ -13,7 +14,7 @@ export class RestaurantService {
 
   async addRestaurant(data: any, uid) {
     try {
-      const restaurant = Object.assign({}, data);
+      let restaurant = Object.assign({}, data);
       delete restaurant.g;
       delete restaurant.distance;
       console.log(restaurant);
@@ -26,6 +27,16 @@ export class RestaurantService {
 
   async getRestaurants() {
     try {
+      // const restaurants = await this.api.collection('restaurants').get().pipe(
+      //   switchMap(async(data: any) => {
+      //     let restaurantData = await data.docs.map(element => {
+      //       const item = element.data();
+      //       return item;
+      //     });
+      //     console.log(restaurantData);
+      //     return restaurantData;
+      //   })
+      // ).toPromise();
       const querySnapshot = await this.api.getDocs('restaurants');
       const restaurants = await querySnapshot.docs.map((doc: any) => {
         return doc.data();
@@ -39,6 +50,7 @@ export class RestaurantService {
 
   async getRestaurantById(id): Promise<any> {
     try {
+      // const restaurant = (await (this.api.collection('restaurants').doc(id).get().toPromise())).data();
       let restaurant: Restaurant;
       const docSnap: any = await this.api.getDocById(`restaurants/${id}`);
       if(docSnap?.exists()) {

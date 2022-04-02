@@ -8,7 +8,6 @@ export class Restaurant {
         public cuisines: string[],
         public rating: number,
         public delivery_time: number,
-        public price: number,
         public phone: number,
         public email: string,
         public isClose: boolean,

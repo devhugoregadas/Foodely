@@ -71,7 +71,7 @@ export class EditProfileComponent implements OnInit {
       [{
         name: 'password',
         type: 'password',
-        placeholder: 'Enter Password',
+        placeholder: 'Enter Password',        
       }]
       );
   }

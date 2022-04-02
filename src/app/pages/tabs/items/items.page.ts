@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { CartService } from 'src/app/services/cart/cart.service';
+// import { take } from 'rxjs/operators';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { Category } from 'src/app/models/category.model';
 import { Item } from 'src/app/models/item.model';
@@ -11,7 +12,7 @@ import { Cart } from 'src/app/interfaces/cart.interface';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { MenuService } from 'src/app/services/menu/menu.service';
-
+// import { Cart } from 'src/app/models/cart.model';
 
 @Component({
   selector: 'app-items',
@@ -55,6 +56,15 @@ export class ItemsPage implements OnInit, OnDestroy {
     } 
     this.id = id;
     console.log('id: ', this.id);
+    // this.route.paramMap.pipe(take(1)).subscribe(paramMap => {
+    //   console.log('route data: ', paramMap);
+    //   if(!paramMap.has('restaurantId')) {
+    //     this.navCtrl.back();
+    //     return;
+    //   }
+    //   this.id = paramMap.get('restaurantId');
+    //   console.log('id: ', this.id);
+    // });
     this.cartSub = this.cartService.cart.subscribe(cart => {
       console.log('cart items: ', cart);
       this.cartData = {} as Cart;
@@ -62,12 +72,12 @@ export class ItemsPage implements OnInit, OnDestroy {
       if(cart && cart?.totalItem > 0) {
         this.storedData = cart;
         this.cartData.totalItem = this.storedData.totalItem;
-        this.cartData.totalPrice = this.storedData.totalPrice;
         if(cart?.restaurant?.uid === this.id) {
           this.allItems.forEach(element => {
             let qty = false;
             cart.items.forEach(element2 => {
               if(element.id != element2.id) {
+                // if((cart?.from && cart?.from == 'cart') && element?.quantity) element.quantity = 0;
                 return;
               }
               element.quantity = element2.quantity;
@@ -109,15 +119,18 @@ export class ItemsPage implements OnInit, OnDestroy {
       this.allItems = await this.menuService.getRestaurantMenu(this.id);
       this.items = [...this.allItems];
       console.log('items: ', this.items);
+      console.log('categories: ', this.categories);
       console.log('restaurant: ', this.data);
       await this.cartService.getCartData();
       this.isLoading = false;
-    } 
-      catch(e) {
-        console.log(e);
-        this.isLoading = false;
-        this.global.errorToast();
-      }
+      // this.allItems.forEach((element, index) => {
+        //     this.allItems[index].quantity = 0;
+        //   });
+    } catch(e) {
+      console.log(e);
+      this.isLoading = false;
+      this.global.errorToast();
+    }
   }
 
   vegOnly(event) {
@@ -168,7 +181,10 @@ export class ItemsPage implements OnInit, OnDestroy {
   }
 
   checkItemCategory(id) {
+    console.log('id', id);
+    console.log(this.items);
     const item = this.items.find(x => x.category_id.id == id);
+    console.log('item: ', item);
     if(item) return true;
     return false;
   }

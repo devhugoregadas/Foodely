@@ -42,15 +42,7 @@
       </ion-list-header>
       <ion-item lines="none">
         <ion-label color="dark">Item Total</ion-label>
-        <ion-text slot="end" color="dark">CHF {{model?.totalPrice | number: '0.2-2'}}</ion-text>
-      </ion-item>
-      <ion-item lines="full">
-        <ion-label color="dark">Delivery fee</ion-label>
-        <ion-text slot="end" color="dark">CHF {{model?.deliveryCharge | number: '0.2-2'}}</ion-text>
-      </ion-item>
-      <ion-item lines="none">
-        <ion-label color="dark">To Pay</ion-label>
-        <ion-text slot="end" color="dark"><h5>CHF {{model?.grandTotal | number: '0.2-2'}}</h5></ion-text>
+        <ion-text slot="end" color="dark">{{model?.totalItem | number: '0.2-2'}}</ion-text>
       </ion-item>
     </ion-list>
   </ng-container>
@@ -80,6 +72,7 @@
       </ion-label>
     </ion-item>
     <ion-item lines="none" *ngIf="location?.lat && (!location?.id || location?.id == '')">
+      <!-- <ion-button slot="end" size="small" fill=clear (click)="addAddress(location)">ADD</ion-button> -->
       <ion-icon slot="start" name="location-outline"></ion-icon>
       <ion-label>
         <h5>You are in a new location!</h5>
@@ -96,7 +89,7 @@
       <ion-col size="6" class="ion-no-padding" (click)="scrollToBottom()">
         <ion-item lines="none" color="light" class="ion-no-padding">
           <ion-label>
-            <h6>CHF {{model?.grandTotal | number: '0.2-2'}}</h6>
+            <h6>CHF </h6>
             <ion-text color="secondary">
               VIEW DETAILED BILL
               <ion-icon name="chevron-down-outline"></ion-icon>
@@ -104,8 +97,8 @@
           </ion-label>
         </ion-item>
       </ion-col>
-      <ion-col size="6" class="ion-text-center colStyle" (click)="makePayment()">
-        <ion-button color="white" fill="clear">MAKE PAYMENT</ion-button>
+      <ion-col size="6" class="ion-text-center colStyle" (click)="validateOrder()">
+        <ion-button color="white" fill="clear">VALIDATE</ion-button>
       </ion-col>
     </ion-row>
   </ion-toolbar>

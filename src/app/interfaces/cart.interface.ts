@@ -6,9 +6,6 @@ export interface Cart {
     restaurant: Restaurant;
     items: Item[];
     totalItem?: number;
-    totalPrice?: number;
-    grandTotal?: number;
     location?: Address;
-    deliveryCharge?: number;
     from?: string;
 }

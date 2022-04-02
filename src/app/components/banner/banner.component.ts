@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { Banner } from 'src/app/models/banner.model';
-import SwiperCore, { SwiperOptions, Pagination, Keyboard, Autoplay } from 'swiper';
-SwiperCore.use([Pagination, Keyboard, Autoplay]); // pass Autoplay here & above if in use
+
+// import Swiper core and required modules
+import SwiperCore, { SwiperOptions, Pagination, Keyboard } from 'swiper';
+SwiperCore.use([Pagination, Keyboard]); // pass Autoplay here & above if in use
 
 @Component({
   selector: 'app-banner',
@@ -28,9 +30,9 @@ export class BannerComponent implements OnInit, AfterContentChecked {
       centeredSlides: true,
       initialSlide: this.bannerImages?.length > 1 ? 1 : 0,
       loop: true,
-      autoplay: {
-        delay: 3000
-      }
+      // autoplay: {
+      //   delay: 1000
+      // }
     };
   }
 

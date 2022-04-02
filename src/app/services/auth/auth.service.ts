@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+// import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Auth, createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, updateEmail } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
+// import { map, take } from 'rxjs/operators';
 import { Strings } from 'src/app/enum/strings.enum';
 import { User } from 'src/app/models/user.model';
-import { environment } from 'src/environments/environment';
 import { ApiService } from '../api/api.service';
 import { StorageService } from '../storage/storage.service';
 
@@ -20,11 +20,20 @@ export class AuthService {
   public static UNKNOWN_USER = null;
   private _uid = new BehaviorSubject<AuthUserId>(AuthService.UNKNOWN_USER);
 
+  // get userId() {
+  //   return this._uid.asObservable().pipe(map(uid => {
+  //       console.log(uid);
+  //       if(uid) return uid
+  //       else return AuthService.UNKNOWN_USER;
+  //     })
+  //   );
+  // }
+
   constructor(
     private storage: StorageService,
+    // private fireAuth: AngularFireAuth,
     private fireAuth: Auth,
-    private apiService: ApiService,
-    private http: HttpClient
+    private apiService: ApiService
   ) { }
 
   async login(email: string, password: string): Promise<any> {
@@ -32,6 +41,8 @@ export class AuthService {
       const response = await signInWithEmailAndPassword(this.fireAuth, email, password);
       console.log(response);
       if(response.user) {
+        // const token = await (await this.fireAuth.currentUser).getIdToken();
+        // console.log('token: ', token);
         const user: any = await this.getUserData(response.user.uid);
         if(user?.type == Strings.TYPE || user?.type == 'admin') {
           this.setUserData(response.user.uid);
@@ -73,6 +84,7 @@ export class AuthService {
         type ? type : 'user',
         'active'
       );
+      // await this.apiService.collection('users').doc(registeredUser.user.uid).set(Object.assign({}, data));
       await this.apiService.setDocument(`users/${registeredUser.user.uid}`, Object.assign({}, data));
       if(!type || type != 'restaurant') {
         await this.setUserData(registeredUser.user.uid);
@@ -87,34 +99,8 @@ export class AuthService {
     }
   }
 
-  async createUser(formValue, type) {
-    try {
-      const response = await this.http.post<any>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebase.apiKey}`, 
-        {
-          email: formValue.email,
-          password: formValue.password
-        }
-      ).toPromise();
-      console.log('registered user: ', response);
-      const uid = response.localId;
-      const data = new User(
-        formValue.email,
-        formValue.phone,
-        formValue.name,
-        uid,
-        type,
-        'active'
-      );
-      await this.apiService.setDocument(`users/${uid}`, Object.assign({}, data));
-      const userData = {
-        id: uid,
-        type
-      };
-      return userData;
-    } catch(e) {
-      throw(e);
-    }
+  createUser() {
+    // createUserF
   }
 
   async resetPassword(email: string) {
@@ -147,10 +133,17 @@ export class AuthService {
   }
 
   checkAuth(): Promise<any> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       onAuthStateChanged(this.fireAuth, user => {
         console.log('auth user: ', user);
         resolve(user)
+        // if(user) {
+        //   this.setUserData(user.uid);         
+        //   resolve(user.uid);
+        // } else {
+        //   // this.logout();
+        //   reject(false);
+        // }
       });
     });
   }
@@ -172,6 +165,7 @@ export class AuthService {
   }
 
   async getUserData(id) {
+    // return (await (this.apiService.collection('users').doc(id).get().toPromise())).data();
     const docSnap: any = await this.apiService.getDocById(`users/${id}`);
       if(docSnap?.exists()) {
         return docSnap.data();

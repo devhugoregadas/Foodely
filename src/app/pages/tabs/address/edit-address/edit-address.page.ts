@@ -41,6 +41,7 @@ export class EditAddressPage implements OnInit {
     this.isLoading = true;
     this.location.title = 'Locating...';
     this.isLocationFetched = false;
+    // this.route.queryParams.subscribe(async(data) => {});
     const data = this.route.snapshot.queryParams;
     console.log('data: ', data);
     if(data?.data) {

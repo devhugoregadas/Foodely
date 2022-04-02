@@ -114,6 +114,7 @@ export class AccountPage implements OnInit, OnDestroy {
       componentProps: {
         profile: this.profile
       },
+      // cssClass: 'custom-modal',
       swipeToClose: true,
       breakpoints: [0, 0.5, 0.8],
       initialBreakpoint: 0.8
@@ -129,7 +130,6 @@ export class AccountPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this.ordersSub) this.ordersSub.unsubscribe();
     if(this.profileSub) this.profileSub.unsubscribe();
-    this.orderService.reset();
   }
 
 }

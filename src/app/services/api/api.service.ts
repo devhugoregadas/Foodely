@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+// import { switchMap } from 'rxjs/operators';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import * as geofirestore from 'geofirestore';
@@ -120,6 +121,9 @@ export class ApiService {
     }
   }
 
+  // collection(path, queryFn?) {
+  //   return this.adb.collection(path, queryFn);
+  // }
 
   geoCollection(path) {
     return this.GeoFirestore.collection(path);
@@ -133,6 +137,17 @@ export class ApiService {
   // city apis
   async getCities() {
     try {
+      // const cities = await this.collection('cities').get().pipe(
+      //   switchMap(async(data: any) => {
+      //     let cityData = await data.docs.map(element => {
+      //       let item = element.data();
+      //       item.uid = element.id;
+      //       return item;
+      //     });
+      //     console.log(cityData);
+      //     return cityData;
+      //   })
+      // ).toPromise();
       const querySnapshot = await this.getDocs('cities');
       const cities = await querySnapshot.docs.map(doc => {
         let item = doc.data();

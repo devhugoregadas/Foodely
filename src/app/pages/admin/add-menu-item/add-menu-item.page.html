@@ -72,21 +72,6 @@
       </ion-item> 
 
       <ion-item>
-        <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon> 
-        <ion-input
-          type="number"
-          name="price"
-          ngModel
-          #price="ngModel"
-          placeholder="Price"
-          required>
-        </ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="!price.valid && price.touched">
-        <p class="errorMsg">* Please enter the price</p>
-      </ion-text>
-
-      <ion-item>
         <ion-label>Veg</ion-label>
         <ion-toggle slot="end" name="veg" [(ngModel)]="veg"></ion-toggle>
       </ion-item>

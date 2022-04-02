@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+// import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgForm } from '@angular/forms';
+// import { finalize } from 'rxjs/operators';
 import { Category } from 'src/app/models/category.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -28,6 +30,7 @@ export class AddMenuItemPage implements OnInit {
   constructor(
     public global: GlobalService,
     public apiService: ApiService,
+    // private afStorage: AngularFireStorage,
     private restaurantService: RestaurantService,
     private categoryService: CategoryService,
     private menuService: MenuService
@@ -112,6 +115,28 @@ export class AddMenuItemPage implements OnInit {
   }
 
   async uploadImage(imageFile) {
+    // return new Promise((resolve, reject) => {
+    //   const mimeType = imageFile.type;
+    //   if(mimeType.match(/image\/*/) == null) return;
+    //   const file = imageFile;
+    //   const filePath = 'menu/' + Date.now() + '_' + file.name;
+    //   const fileRef = this.afStorage.ref(filePath);
+    //   const task = this.afStorage.upload(filePath, file);
+    //   task.snapshotChanges()
+    //   .pipe(
+    //     finalize(() => {
+    //       const downloadUrl = fileRef.getDownloadURL();
+    //       downloadUrl.subscribe(url => {
+    //         console.log('url: ', url);
+    //         if(url) {
+    //           resolve(url);
+    //         }
+    //       })
+    //     })
+    //   ).subscribe(url => {
+    //     console.log(url);
+    //   });
+    // });
     try {
       const mimeType = imageFile.type;
       if(mimeType.match(/image\/*/) == null) return;
@@ -124,6 +149,5 @@ export class AddMenuItemPage implements OnInit {
       this.global.errorToast('Image upload failed');
     }
   }
-
 
 }

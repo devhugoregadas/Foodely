@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { AddMenuItemPage } from './add-menu-item.page';
@@ -7,7 +7,7 @@ describe('AddMenuItemPage', () => {
   let component: AddMenuItemPage;
   let fixture: ComponentFixture<AddMenuItemPage>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AddMenuItemPage ],
       imports: [IonicModule.forRoot()]

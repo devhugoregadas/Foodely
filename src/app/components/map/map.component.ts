@@ -15,7 +15,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   map: any;
   marker: any;
   @Input() update = false;
-  @Input() center = { lat: 46.2167, lng: 6.0833 };
+  @Input() center = { lat: 28.649944693035188, lng: 77.23961776224988 };
   @Output() location: EventEmitter<any> = new EventEmitter();
   mapListener: any;
   mapChange: Subscription;
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     } catch(e) {
       console.log(e);
-      this.center = { lat: 46.2167, lng: 6.0833 };
+      this.center = { lat: 28.649944693035188, lng: 77.23961776224988 };
       console.log(this.center);
       this.loadMap();
       this.getAddress(this.center.lat, this.center.lng);
@@ -89,12 +89,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         overviewMapControl: false,
         mapTypeControl: false,
         mapTypeControlOptions: {
-          mapTypeIds: [googleMaps.MapTypeId.ROADMAP, 'Foodely']
+          mapTypeIds: [googleMaps.MapTypeId.ROADMAP, 'SwiggyClone']
         }
       });
       var mapType = new googleMaps.StyledMapType(style, { name: 'Grayscale' });
-      this.map.mapTypes.set('Foodely', mapType);
-      this.map.setMapTypeId('Foodely');
+      this.map.mapTypes.set('SwiggyClone', mapType);
+      this.map.setMapTypeId('SwiggyClone');
       this.renderer.addClass(mapEl, 'visible');
       this.addMarker(location);
     } catch(e) {

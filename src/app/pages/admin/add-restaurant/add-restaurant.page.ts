@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+// import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgForm } from '@angular/forms';
+// import { finalize } from 'rxjs/operators';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { GlobalService } from 'src/app/services/global/global.service';
+// import firebase from 'firebase/compat/app';
+// import 'firebase/compat/firestore';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CategoryService } from 'src/app/services/category/category.service';
@@ -26,6 +30,7 @@ export class AddRestaurantPage implements OnInit {
 
   constructor(
     private authService: AuthService, 
+    // public afStorage: AngularFireStorage,
     public apiService: ApiService,
     private global: GlobalService,
     private restaurantService: RestaurantService,
@@ -91,6 +96,23 @@ export class AddRestaurantPage implements OnInit {
     if(mimeType.match(/image\/*/) == null) return;
     const file = files[0];
     const filePath = 'restaurants/' + Date.now() + '_' + file.name;
+    // const fileRef = this.afStorage.ref(filePath);
+    // const task = this.afStorage.upload(filePath, file);
+    // task.snapshotChanges()
+    // .pipe(
+    //   finalize(() => {
+    //     const downloadUrl = fileRef.getDownloadURL();
+    //     downloadUrl.subscribe(url => {
+    //       console.log('url: ', url);
+    //       if(url) {
+    //         this.coverImage = url;
+    //       }
+    //     })
+    //   })
+    // )
+    // .subscribe(url => {
+    //   console.log('data: ', url);
+    // });
     try {
       const url = await this.apiService.uploadImage(file, filePath);
       this.coverImage = url;
@@ -114,7 +136,7 @@ export class AddRestaurantPage implements OnInit {
     try {
       this.isLoading = true;
       console.log(form.value);
-      const data = await this.authService.createUser(form.value, 'restaurant');
+      const data = await this.authService.register(form.value, 'restaurant');
       if(data?.id) {
         const position = this.apiService.getGeoPoint(this.location.lat, this.location.lng);
         const restaurant = new Restaurant(
@@ -125,7 +147,6 @@ export class AddRestaurantPage implements OnInit {
           this.cuisines,
           0,
           form.value.delivery_time,
-          form.value.price,
           form.value.phone,
           form.value.email,
           false,
@@ -141,6 +162,7 @@ export class AddRestaurantPage implements OnInit {
         const result = await this.restaurantService.addRestaurant(restaurant, data.id);
         console.log(result);
         await this.categoryService.addCategories(this.categories, data.id);
+        // form.reset();
         this.global.successToast('Restaurant Added Successfully');
       } else {
         this.global.showAlert('Restaurant Registration failed');

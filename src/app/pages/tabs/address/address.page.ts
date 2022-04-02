@@ -42,10 +42,12 @@ export class AddressPage implements OnInit, OnDestroy {
     try {
       this.isLoading = true;
       this.global.showLoader();
+    // setTimeout(async() => {
       await this.addressService.getAddresses();
       console.log(this.addresses);
       this.isLoading = false;
       this.global.hideLoader();
+    // }, 3000);
     } catch(e) {
       console.log(e);
       this.isLoading = false;

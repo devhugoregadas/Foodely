@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Cart } from 'src/app/interfaces/cart.interface';
+// import { Cart } from 'src/app/models/cart.model';
 import { Item } from 'src/app/models/item.model';
 import { Order } from 'src/app/models/order.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
@@ -97,13 +98,15 @@ export class CartService {
         if(this.model.from) this.model.from = '';
       }
       if(restaurant) {
+        // this.model.restaurant = {}; 
         this.model.restaurant = restaurant; 
       }
       console.log('q plus: ', this.model.items[index]);
+      // this.model.items[index].quantity += 1;
       if(!this.model.items[index].quantity || this.model.items[index].quantity == 0) {
         this.model.items[index].quantity = 1;
       } else {
-        this.model.items[index].quantity += 1;
+        this.model.items[index].quantity += 1; // this.model.items[index].quantity = this.model.items[index].quantity + 1
       }
       console.log('check cart: ', this.model.items);
       await this.calculate();
@@ -126,7 +129,7 @@ export class CartService {
       }
       console.log('item: ', this.model.items[index]);
       if(this.model.items[index].quantity && this.model.items[index].quantity !== 0) {
-        this.model.items[index].quantity -= 1;
+        this.model.items[index].quantity -= 1; // this.model.items[index].quantity = this.model.items[index].quantity - 1
       } else {
         this.model.items[index].quantity = 0;
       }
@@ -143,20 +146,12 @@ export class CartService {
     let item = this.model.items.filter(x => x.quantity > 0);
     console.log('model check qty: ', item);
     this.model.items = item;
-    this.model.totalPrice = 0;
     this.model.totalItem = 0;
-    this.model.deliveryCharge = 0;
-    this.model.grandTotal = 0;
     item.forEach(element => {
       this.model.totalItem += element.quantity;
-      this.model.totalPrice += element.price * element.quantity;
     });
-    this.model.deliveryCharge = this.deliveryCharge;
-    this.model.grandTotal = this.model.totalPrice + this.model.deliveryCharge;
     if(this.model.totalItem == 0) {
       this.model.totalItem = 0;
-      this.model.totalPrice = 0;
-      this.model.grandTotal = 0;
       await this.clearCart();
       this.model = {} as Cart;
     }
@@ -173,6 +168,7 @@ export class CartService {
   saveCart(model?) {
     if(model) this.model = model;
     this.storage.setStorage('cart', JSON.stringify(this.model));
+    // this._cart.next(this.model);
   }
 
   deg2rad(deg) {
@@ -196,6 +192,22 @@ export class CartService {
 
   async checkCart(lat1, lng1, radius) {
     let distance: number;
+    // if(this.model?.restaurant) {
+    //   distance = this.getDistanceFromLatLngInKm(
+    //     lat1, 
+    //     lng1, 
+    //     this.model.restaurant.latitude, 
+    //     this.model.restaurant.longitude);
+    // } else {
+    //   await this.getCartData(1);
+    //   if(this.model?.restaurant) {
+    //     distance = this.getDistanceFromLatLngInKm(
+    //       lat1, 
+    //       lng1, 
+    //       this.model.restaurant.latitude, 
+    //       this.model.restaurant.longitude);
+    //   }
+    // }
     await this.getCartData(1);
     if(this.model?.restaurant) {
       distance = this.getDistanceFromLatLngInKm(

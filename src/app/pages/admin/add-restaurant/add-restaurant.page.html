@@ -161,21 +161,6 @@
       </ion-item>
 
       <ion-item color="light" class="ion-margin-bottom">
-        <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon> 
-        <ion-input
-          type="number"
-          name="price"
-          ngModel
-          #price="ngModel"
-          placeholder="Price for Two"
-          required>
-        </ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="!price.valid && price.touched">
-        <p class="errorMsg">* Please enter price for two persons</p>
-      </ion-text>
-
-      <ion-item color="light" class="ion-margin-bottom">
         <ion-icon name="time-outline" slot="start" color="primary"></ion-icon> 
         <ion-input
           type="number"

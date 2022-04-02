@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
 import { Cart } from 'src/app/interfaces/cart.interface';
 import { Address } from 'src/app/models/address.model';
+// import { Cart } from 'src/app/models/cart.model';
 import { AddressService } from 'src/app/services/address/address.service';
+// import { Order } from 'src/app/models/order.model';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { GlobalService } from 'src/app/services/global/global.service';
 import { OrderService } from 'src/app/services/order/order.service';
@@ -22,7 +24,6 @@ export class CartPage implements OnInit, OnDestroy {
   urlCheck: any;
   url: any;
   model = {} as Cart;
-  deliveryCharge = 20;
   instruction: any;
   location = {} as Address;
   cartSub: Subscription;
@@ -49,7 +50,7 @@ export class CartPage implements OnInit, OnDestroy {
         if(result) {
           this.global.errorToast(
             'Your location is too far from the restaurant in the cart, kindly search from some other restaurant nearby.',
-            5000);
+            3000);
           this.cartService.clearCart();
         }
       }
@@ -111,6 +112,7 @@ export class CartPage implements OnInit, OnDestroy {
       const options = {
         component: SearchLocationComponent,
         swipeToClose: true,
+        // cssClass: 'custom-modal',
         componentProps: {
           from: 'cart'
         },
@@ -127,21 +129,18 @@ export class CartPage implements OnInit, OnDestroy {
     }
   }
 
-  async makePayment() {
+  async validateOrder() {
     try {
       console.log('model: ', this.model);
       const data = {
         restaurant_id: this.model.restaurant.uid,
         instruction: this.instruction ? this.instruction : '',
         restaurant: this.model.restaurant,
-        order: this.model.items,
+        order: this.model.items, //JSON.stringify(this.model.items)
         time: moment().format('lll'),
         address: this.location,
-        total: this.model.totalPrice,
-        grandTotal: this.model.grandTotal,
-        deliveryCharge: this.deliveryCharge,
         status: 'Created',
-        paid: 'COD'
+        validate: 'COD'
       };
       console.log('order: ', data);
       await this.orderService.placeOrder(data);

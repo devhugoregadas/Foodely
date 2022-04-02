@@ -78,7 +78,7 @@ export class GoogleMapsService {
       service.getPlacePredictions({
         input: query,
         componentRestrictions: {
-          country: 'CH'
+          country: 'CHE'
         }
       }, (predictions) => {
         let autoCompleteItems = [];
@@ -108,7 +108,7 @@ export class GoogleMapsService {
 
   geoCode(address, googleMaps) {
     let latlng = {lat: '', lng: ''};
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       let geocoder = new googleMaps.Geocoder();
       geocoder.geocode({'address' : address}, (results) => {
         console.log('results: ', results);
