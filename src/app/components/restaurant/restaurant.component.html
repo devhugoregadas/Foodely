@@ -13,7 +13,7 @@
       <ion-icon name="star"></ion-icon>
       {{restaurant?.rating}} .
     </span>
-    {{restaurant?.delivery_time}} mins .
+    Ready in {{restaurant?.delivery_time}} mins .
     <ion-text color="tertiary" *ngIf="restaurant?.distance && restaurant?.distance != 0">
       <p class="distance">{{restaurant?.distance | number: '0.0-2'}} kms away</p>
     </ion-text>

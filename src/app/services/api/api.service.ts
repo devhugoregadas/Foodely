@@ -17,6 +17,9 @@ import { uploadBytes } from 'firebase/storage';
   providedIn: 'root'
 })
 export class ApiService {
+  updateDocument(arg0: string, param: any) {
+    throw new Error('Method not implemented.');
+  }
 
   radius = 20;// in km
   firestoreDB: any = firebase.firestore();
@@ -90,11 +93,6 @@ export class ApiService {
   setDocument(path, data) {
     const dataRef = this.docRef(path);
     return setDoc<any>(dataRef, data); //set()
-  }
-
-  updateDocument(path, data) {
-    const dataRef = this.docRef(path);
-    return updateDoc<any>(dataRef, data); //update()
   }
 
   deleteDocument(path) {

@@ -15,9 +15,9 @@ export class AuthGuard implements CanLoad {
     private router: Router) {}
 
   async canLoad(
-    route: Route,
-    segments: UrlSegment[]): Promise<boolean> {
-      const roleType = route.data.type;
+    _route: Route,
+    _segments: UrlSegment[]): Promise<boolean> {
+      const roleType = _route.data.type;
       try {
         const type = await this.authService.checkUserAuth();
         console.log(type);

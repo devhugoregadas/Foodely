@@ -15,8 +15,8 @@ export class AutoLoginGuard implements CanLoad {
 
 
   async canLoad(
-    route: Route,
-    segments: UrlSegment[]): Promise<boolean> {
+    _route: Route,
+    _segments: UrlSegment[]): Promise<boolean> {
       try {
         const val = await this.authService.getId();
         console.log(val);

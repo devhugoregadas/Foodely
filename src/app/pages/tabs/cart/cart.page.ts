@@ -154,10 +154,6 @@ export class CartPage implements OnInit, OnDestroy {
     }
   }
 
-  scrollToBottom() {
-    this.content.scrollToBottom(500);
-  }
-
   ionViewWillLeave() {
     console.log('ionViewWillLeave CartPage');
     if(this.model?.items && this.model?.items.length > 0) {
