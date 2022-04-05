@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 // import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { NgForm } from '@angular/forms';
 // import { finalize } from 'rxjs/operators';
 import { Category } from 'src/app/models/category.model';
+import { Item } from 'src/app/models/item.model';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CategoryService } from 'src/app/services/category/category.service';
@@ -26,6 +27,12 @@ export class AddMenuItemPage implements OnInit {
   status = true;
   imageFile: any;
   category: any;
+  quantity: number = 0;
+
+  @Input() item: Item;
+  @Input() index: any;
+  @Output() add: EventEmitter<any> = new EventEmitter();
+  @Output() minus: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public global: GlobalService,
@@ -82,6 +89,7 @@ export class AddMenuItemPage implements OnInit {
         cover: url,
         veg: this.veg,
         status: this.status,
+        quantity: this.quantity,
         ...form.value
       };
       console.log('data: ', data);      
@@ -93,6 +101,14 @@ export class AddMenuItemPage implements OnInit {
       this.isLoading = false;
       this.global.errorToast();
     }
+  }
+
+  quantityPlus() {
+    this.add.emit(this.index);
+  }
+
+  quantityMinus() {
+    this.minus.emit(this.index);
   }
 
   changeImage() {

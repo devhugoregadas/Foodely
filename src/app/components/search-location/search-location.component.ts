@@ -77,7 +77,7 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
     try {
       this.global.showLoader();
       const position = await this.locationService.getCurrentLocation();
-      const {latitude, longitude} = position.coords;
+      const {latitude, longitude} = position.coords; // Gps coordinates along with the accuracy of the data
       const result = await this.maps.getAddress(latitude, longitude);
       console.log(result);
       const place = {

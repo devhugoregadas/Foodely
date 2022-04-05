@@ -13,7 +13,7 @@ export class StorageService {
   }
 
   getStorage(key) {
-    // Storage.migrate();
+    Storage.migrate();
     return Storage.get({key: key});
   }
 

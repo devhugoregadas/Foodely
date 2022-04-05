@@ -3,6 +3,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { Address } from 'src/app/models/address.model';
 
 @Injectable({
   providedIn: 'root'
@@ -122,5 +123,16 @@ export class GoogleMapsService {
   changeMarkerInMap(location) {
     this._markerChange.next(location);
   }
+
+  // getLatLngBounds(places: Address[]): Address|null {
+  //   const bound = this.googleMaps.LatLngBounds();
+  //   const i = places.findIndex(place =>{
+  //     bound.contains([place.lat, place.lng]);
+  //   });
+  //   if (i >= 0){
+  //     return places[i];
+  //   }
+  //   return null;
+  // }
 
 }

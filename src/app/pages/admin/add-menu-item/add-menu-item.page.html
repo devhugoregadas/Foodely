@@ -81,6 +81,15 @@
         <ion-toggle slot="end" name="status" [(ngModel)]="status"></ion-toggle>
       </ion-item>
 
+      <ion-item>
+        <ion-label>Quantity</ion-label>
+        <ion-row >
+          <ion-icon name="remove-outline" (click)="quantityMinus()"></ion-icon>
+          <ion-text class="ion-text-center quantity" color="success">{{item?.quantity}}</ion-text>
+          <ion-icon name="add-outline" (click)="quantityPlus()"></ion-icon>
+        </ion-row>
+      </ion-item>
+
       <div class="itemImage" *ngIf="!image || image == ''" (click)="changeImage()">
         <ion-icon name="cloud-upload-outline" color="primary"></ion-icon>
         <p>Upload Item Image here</p>

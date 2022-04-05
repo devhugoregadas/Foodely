@@ -26,6 +26,7 @@ export class MenuService {
         data.rating,
         data.veg,
         data.status,
+        data.quantity,
         0
       );
       let itemData = Object.assign({}, item);

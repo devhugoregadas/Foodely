@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, AfterContentChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { Banner } from 'src/app/models/banner.model';
-
-// import Swiper core and required modules
 import SwiperCore, { SwiperOptions, Pagination, Keyboard } from 'swiper';
-SwiperCore.use([Pagination, Keyboard]); // pass Autoplay here & above if in use
+SwiperCore.use([Pagination, Keyboard]);
 
 @Component({
   selector: 'app-banner',

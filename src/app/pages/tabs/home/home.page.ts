@@ -41,7 +41,6 @@ export class HomePage implements OnInit, OnDestroy {
       if(address && address?.lat) {
         if(!this.isLoading) this.isLoading = true;
         this.location = address;
-        // this.nearbyApiCall(address.lat, address.lng);
         this.nearbyApiCall();
       } else {
         if(address && (!this.location || !this.location?.lat)) {
