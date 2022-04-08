@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { map } from 'functions/node_modules/@firebase/util/dist/util-public';
 import { Subscription } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
 import { Address } from 'src/app/models/address.model';
@@ -58,6 +59,14 @@ export class HomePage implements OnInit, OnDestroy {
       this.getNearbyRestaurants();
     }   
   }
+
+  // async getgetLatLngBounds(lat: number, lng: number): Promise<GoogleMapsService> {
+  //   return this.mapService.googleMaps.LatLngBounds.contains(this.location.lat, this.location.lng);
+  // }
+
+  // async getLatLngBounds() {
+  //   this.map.setCenter(new google.maps.LatLng(this.location.lat, this.location.lng));
+  // } 
 
   getBanners() {
     this.bannerService.getBanners().then(data => {
