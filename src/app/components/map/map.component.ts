@@ -9,6 +9,11 @@ import { LocationService } from 'src/app/services/location/location.service';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
+ 
+  /*Deciding ifstatic should be true or false comes down to whether 
+  or not you are dynamically rendering the element in your template, 
+  like with *ngIf or *ngFor. 
+  */
 
   @ViewChild('map', {static: true}) mapElementRef: ElementRef;
   googleMaps: any;

@@ -49,7 +49,7 @@ export class EditProfileComponent implements OnInit {
 
   presentPasswordPrompt(data) {
     this.global.showAlert(
-      'Please enter your password to change YOur Email Address', 
+      'Please enter your password to change Your Email Address', 
       'Verify',
       [{
         text: 'Cancel',
@@ -64,7 +64,7 @@ export class EditProfileComponent implements OnInit {
           if(inputData.password.trim() != '' && inputData.password.length >= 8) {
             this.updateEmail(data, inputData.password);
           } else {
-            this.global.errorToast('Password must be of atleast 8 characters');
+            this.global.errorToast('Password must be of at least 8 characters');
           }
         }
       }],

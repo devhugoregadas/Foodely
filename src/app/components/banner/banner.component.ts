@@ -14,7 +14,7 @@ export class BannerComponent implements OnInit, AfterContentChecked {
   @Input() bannerImages: Banner[];
   slideOptions: SwiperOptions = {};
 
-  constructor(public router: Router) { }
+  constructor(public router: Router) {}
 
   ngOnInit() {
     console.log(this.bannerImages);
@@ -28,9 +28,6 @@ export class BannerComponent implements OnInit, AfterContentChecked {
       centeredSlides: true,
       initialSlide: this.bannerImages?.length > 1 ? 1 : 0,
       loop: true,
-      // autoplay: {
-      //   delay: 1000
-      // }
     };
   }
 
