@@ -22,7 +22,6 @@ export class ForgotPasswordPage implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    console.log(form.value);
     if(!form.valid) return;
     this.isLoading = true;
     this.auth.resetPassword(form.value.email).then(() => {     
@@ -30,8 +29,7 @@ export class ForgotPasswordPage implements OnInit {
       this.isLoading = false;
       this.navCtrl.back();
     })
-    .catch(e => {
-      console.log(e);   
+    .catch(e => { 
       this.isLoading = false;
       this.global.showAlert('Something went wrong');
     });

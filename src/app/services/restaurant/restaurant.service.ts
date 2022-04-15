@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-// import { switchMap } from 'rxjs/operators';
 import { Restaurant } from 'src/app/models/restaurant.model';
 import { ApiService } from '../api/api.service';
 
@@ -17,7 +16,6 @@ export class RestaurantService {
       let restaurant = Object.assign({}, data);
       delete restaurant.g;
       delete restaurant.distance;
-      console.log(restaurant);
       const response = await this.api.geoCollection('restaurants').doc(uid).set(restaurant);
       return response;
     } catch(e) {
@@ -27,21 +25,10 @@ export class RestaurantService {
 
   async getRestaurants() {
     try {
-      // const restaurants = await this.api.collection('restaurants').get().pipe(
-      //   switchMap(async(data: any) => {
-      //     let restaurantData = await data.docs.map(element => {
-      //       const item = element.data();
-      //       return item;
-      //     });
-      //     console.log(restaurantData);
-      //     return restaurantData;
-      //   })
-      // ).toPromise();
       const querySnapshot = await this.api.getDocs('restaurants');
       const restaurants = await querySnapshot.docs.map((doc: any) => {
         return doc.data();
       });
-      console.log(restaurants);
       return restaurants;
     } catch(e) {
       throw(e);
@@ -50,7 +37,6 @@ export class RestaurantService {
 
   async getRestaurantById(id): Promise<any> {
     try {
-      // const restaurant = (await (this.api.collection('restaurants').doc(id).get().toPromise())).data();
       let restaurant: Restaurant;
       const docSnap: any = await this.api.getDocById(`restaurants/${id}`);
       if(docSnap?.exists()) {
@@ -58,7 +44,6 @@ export class RestaurantService {
       } else {
         throw('No such document exists!');
       }
-      console.log(restaurant);
       return restaurant;
     } catch(e) {
       throw(e);

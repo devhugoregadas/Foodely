@@ -25,36 +25,17 @@ export class AddBannerPage implements OnInit {
   }
 
   async preview(event) {
-    console.log(event);
     const files = event.target.files;
     if(files.length == 0) return;
     const mimeType = files[0].type;
     if(mimeType.match(/image\/*/) == null) return;
     const file = files[0];
     const filePath = 'banners/' + Date.now() + '_' + file.name;
-    // const fileRef = this.afStorage.ref(filePath);
-    // const task = this.afStorage.upload(filePath, file);
-    // task.snapshotChanges()
-    // .pipe(
-    //   finalize(() => {
-    //     const downloadUrl = fileRef.getDownloadURL();
-    //     downloadUrl.subscribe(url => {
-    //       console.log('url: ', url);
-    //       if(url) {
-    //         this.bannerImage = url;
-    //       }
-    //     })
-    //   })
-    // )
-    // .subscribe(url => {
-    //   console.log('data: ', url);
-    // });
 
     try {
       const url = await this.apiService.uploadImage(file, filePath);
       this.bannerImage = url;
     } catch(e) {
-      console.log(e);
       this.global.errorToast('Image upload failed');
     }
   }

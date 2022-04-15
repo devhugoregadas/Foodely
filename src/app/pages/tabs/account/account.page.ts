@@ -34,20 +34,17 @@ export class AccountPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.ordersSub = this.orderService.orders.subscribe(order => {
-      console.log('order data: ', order);
       this.orders = order;
     }, e => {
-      console.log(e);
     });
     this.profileSub = this.profileService.profile.subscribe(profile => {
       this.profile = profile;
-      console.log(this.profile);
+
     });
     this.getData();
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter AccountPage');
     this.global.customStatusbar(true);
   }
 
@@ -59,7 +56,6 @@ export class AccountPage implements OnInit, OnDestroy {
       this.isLoading = false; 
     } catch(e) {
       this.isLoading = false;
-      console.log(e);
       this.global.errorToast();
     }
   }
@@ -87,16 +83,14 @@ export class AccountPage implements OnInit, OnDestroy {
       this.global.hideLoader();
     })
     .catch(e => {
-      console.log(e);
       this.global.hideLoader();
       this.global.errorToast('Logout Failed! Check your internet connection');
     });
   }
 
   async reorder(order: Order) {
-    console.log(order);
     let data = await this.cartService.getCart();
-    console.log('data: ', data);
+    (data);
     if(data?.value) {
       this.cartService.alertClearCart(null, null, null, order);
     } else {
@@ -105,7 +99,6 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   getHelp(order) {
-    console.log(order);
   }
 
   async editProfile() {
@@ -114,7 +107,6 @@ export class AccountPage implements OnInit, OnDestroy {
       componentProps: {
         profile: this.profile
       },
-      // cssClass: 'custom-modal',
       swipeToClose: true,
       breakpoints: [0, 0.5, 0.8],
       initialBreakpoint: 0.8
@@ -123,7 +115,6 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   ionViewDidLeave() {
-    console.log('ionViewDidLeave AccountPage');
     this.global.customStatusbar();
   }
 

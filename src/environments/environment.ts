@@ -4,15 +4,15 @@
 
 export const environment = {
   firebase: {
-    apiKey: "AIzaSyBp4y47TmE5Q7PQSOHuB6srFSVd4z-2ZzY",
+    apiKey: "My Api KEY Hugo Regadas",
     authDomain: "foodely.firebaseapp.com",
     projectId: "foodely",
     storageBucket: "foodely.appspot.com",
-    messagingSenderId: "690076438465",
-    appId: "1:690076438465:web:2c819972a71e3575922940",
-    measurementId: "G-S0K5XLS03L"
+    messagingSenderId: "...",
+    appId: "...",
+    measurementId: "..."
    },
-   googleMapsApiKey: 'AIzaSyBp4y47TmE5Q7PQSOHuB6srFSVd4z-2ZzY',
+   googleMapsApiKey: 'My Api KEY Hugo Regadas',
    production: false
  };
 /*

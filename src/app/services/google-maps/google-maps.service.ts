@@ -3,7 +3,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { Address } from 'src/app/models/address.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +73,6 @@ export class GoogleMapsService {
         this.googleMaps = await this.loadGoogleMaps();
       }
       let googleMaps: any = this.googleMaps;
-      console.log('maps: ', this.googleMaps);
       let service = new googleMaps.places.AutocompleteService();
       service.getPlacePredictions({
         input: query,
@@ -86,7 +84,6 @@ export class GoogleMapsService {
         this.zone.run(() => {
           if(predictions != null) {
             predictions.forEach(async(prediction) => {
-              console.log('prediction: ', prediction);
               let latLng: any = await this.geoCode(prediction.description, googleMaps);
               const places = {
                 title: prediction.structured_formatting.main_text,
@@ -94,25 +91,21 @@ export class GoogleMapsService {
                 lat: latLng.lat,
                 lng: latLng.lng
               };
-              console.log('places: ', places);
               autoCompleteItems.push(places);
             });
-            // rxjs behaviorSubject
             this._places.next(autoCompleteItems);
           }
         });
       });
     } catch(e) {
-      console.log(e);
     }
   }
 
   geoCode(address, googleMaps) {
     let latlng = {lat: '', lng: ''};
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let geocoder = new googleMaps.Geocoder();
       geocoder.geocode({'address' : address}, (results) => {
-        console.log('results: ', results);
         latlng.lat = results[0].geometry.location.lat();
         latlng.lng = results[0].geometry.location.lng();
         resolve(latlng);
@@ -123,16 +116,5 @@ export class GoogleMapsService {
   changeMarkerInMap(location) {
     this._markerChange.next(location);
   }
-
-  // getLatLngBounds(places: Address[]): Address|null {
-  //   const bound = this.googleMaps.LatLngBounds();
-  //   const i = places.findIndex(place =>{
-  //     bound.contains([place.lat, place.lng]);
-  //   });
-  //   if (i >= 0){
-  //     return places[i];
-  //   }
-  //   return null;
-  // }
 
 }

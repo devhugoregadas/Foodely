@@ -27,7 +27,6 @@ export class AdminPage implements OnInit, OnDestroy {
       this.global.hideLoader();
     })
     .catch(e => {
-      console.log(e);
       this.global.hideLoader();
       this.global.errorToast('Logout Failed! Check your internet connection');
     });

@@ -41,9 +41,7 @@ export class EditAddressPage implements OnInit {
     this.isLoading = true;
     this.location.title = 'Locating...';
     this.isLocationFetched = false;
-    // this.route.queryParams.subscribe(async(data) => {});
     const data = this.route.snapshot.queryParams;
-    console.log('data: ', data);
     if(data?.data) {
       const address = JSON.parse(data.data);
       if(address?.lat) {
@@ -95,7 +93,6 @@ export class EditAddressPage implements OnInit {
 
   fetchLocation(event) {
     this.location = event;
-    console.log('location: ', this.location);
     this.isLocationFetched = true;
   }
   
@@ -110,7 +107,6 @@ export class EditAddressPage implements OnInit {
   async onSubmit() {
     try {
       this.toggleSubmit();
-      console.log(this.form);
       if(!this.form.valid || !this.isLocationFetched) {
         this.toggleSubmit();
         return;
@@ -123,14 +119,12 @@ export class EditAddressPage implements OnInit {
         lat: this.location.lat,
         lng: this.location.lng,
       };
-      console.log('address: ', data);
       if(!this.id) await this.addressService.addAddress(data);
       else await this.addressService.updateAddress(this.id, data, this.uid);
       this.check = true;
       this.navCtrl.back();
       this.toggleSubmit();
     } catch(e) {
-      console.log(e);
       this.isSubmitted = false;
       this.global.errorToast();
     }
@@ -147,7 +141,6 @@ export class EditAddressPage implements OnInit {
         initialBreakpoint: 0.7
       };
       const location = await this.global.createModal(options);
-      console.log('location: ', location);
       if(location) {
         this.location = location;
         const loc = {
@@ -159,12 +152,10 @@ export class EditAddressPage implements OnInit {
         this.maps.changeMarkerInMap(loc);
       }
     } catch(e) {
-      console.log(e);
     }
   }
 
   ionViewDidLeave() {
-   console.log('ionViewDidLeave EditAddressPage');
    if(this.from == 'home' && !this.check) {
     this.addressService.changeAddress({});
    }

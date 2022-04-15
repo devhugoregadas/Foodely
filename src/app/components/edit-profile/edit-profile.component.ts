@@ -22,7 +22,6 @@ export class EditProfileComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.phoneInput.setFocus();
-      console.log('enter');
     }, 500);
   }
 
@@ -31,7 +30,6 @@ export class EditProfileComponent implements OnInit {
       if(!form.valid) {
         return;
       }
-      console.log(form.value);
       this.isSubmitted = true;
       if(this.profile.email != form.value.email) {
         this.presentPasswordPrompt(form.value);
@@ -41,7 +39,6 @@ export class EditProfileComponent implements OnInit {
       }
       this.isSubmitted = false;
     } catch(e) {
-      console.log(e);
       this.isSubmitted = false;
       this.global.errorToast();
     }
@@ -55,12 +52,10 @@ export class EditProfileComponent implements OnInit {
         text: 'Cancel',
         role: 'cancel',
         handler: () => {
-          console.log('Confirm Cancel');
         }
       }, {
         text: 'Verify',
         handler: (inputData) => {
-          console.log(inputData.password);
           if(inputData.password.trim() != '' && inputData.password.length >= 8) {
             this.updateEmail(data, inputData.password);
           } else {
@@ -81,7 +76,6 @@ export class EditProfileComponent implements OnInit {
       await this.profileService.updateProfileWithEmail(this.profile, data, password);
       this.global.modalDismiss();
     } catch(e) {
-      console.log(e);
       let msg: any = 'No Internet Connection';
       if(e.code == 'auth/email-already-in-use' || e.code == 'auth/wrong-password') {
         msg = e.message;

@@ -30,7 +30,6 @@ export class AddRestaurantPage implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    // public afStorage: AngularFireStorage,
     public apiService: ApiService,
     private global: GlobalService,
     private restaurantService: RestaurantService,
@@ -45,7 +44,6 @@ export class AddRestaurantPage implements OnInit {
     try {
       this.cities = await this.apiService.getCities();
     } catch(e) {
-      console.log(e);
       this.global.errorToast();
     }
   }
@@ -57,19 +55,15 @@ export class AddRestaurantPage implements OnInit {
       };
       const modal = await this.global.createModal(options);
       if(modal) {
-        console.log(modal);
         this.location = modal;
       }
     } catch(e) {
-      console.log(e);
 
     }
   }
 
   addCategory() {
-    console.log(this.category);
     if(this.category.trim() == '') return;
-    console.log(this.isCuisine);
     const checkString = this.categories.find(x => x == this.category);
     if(checkString) {
       this.global.errorToast('Category already added');
@@ -89,35 +83,16 @@ export class AddRestaurantPage implements OnInit {
   }
 
   async preview(event) {
-    console.log(event);
     const files = event.target.files;
     if(files.length == 0) return;
     const mimeType = files[0].type;
     if(mimeType.match(/image\/*/) == null) return;
     const file = files[0];
     const filePath = 'restaurants/' + Date.now() + '_' + file.name;
-    // const fileRef = this.afStorage.ref(filePath);
-    // const task = this.afStorage.upload(filePath, file);
-    // task.snapshotChanges()
-    // .pipe(
-    //   finalize(() => {
-    //     const downloadUrl = fileRef.getDownloadURL();
-    //     downloadUrl.subscribe(url => {
-    //       console.log('url: ', url);
-    //       if(url) {
-    //         this.coverImage = url;
-    //       }
-    //     })
-    //   })
-    // )
-    // .subscribe(url => {
-    //   console.log('data: ', url);
-    // });
     try {
       const url = await this.apiService.uploadImage(file, filePath);
       this.coverImage = url;
     } catch(e) {
-      console.log(e);
       this.global.errorToast('Image upload failed');
     }
   }
@@ -135,7 +110,6 @@ export class AddRestaurantPage implements OnInit {
   async addRestaurant(form: NgForm) {
     try {
       this.isLoading = true;
-      console.log(form.value);
       const data = await this.authService.register(form.value, 'restaurant');
       if(data?.id) {
         const position = this.apiService.getGeoPoint(this.location.lat, this.location.lng);
@@ -160,16 +134,13 @@ export class AddRestaurantPage implements OnInit {
           position
         );
         const result = await this.restaurantService.addRestaurant(restaurant, data.id);
-        console.log(result);
         await this.categoryService.addCategories(this.categories, data.id);
-        // form.reset();
         this.global.successToast('Restaurant Added Successfully');
       } else {
         this.global.showAlert('Restaurant Registration failed');
       }
       this.isLoading = false;       
     } catch(e) {
-      console.log(e);
       this.isLoading = false;
       let msg: string = 'Could not register the restaurant, please try again.';
       if(e.code == 'auth/email-already-in-use') {

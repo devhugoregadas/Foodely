@@ -53,7 +53,6 @@ export class AddMenuItemPage implements OnInit {
       this.restaurants = await this.restaurantService.getRestaurants();
       this.global.hideLoader();
     } catch(e) {
-      console.log(e);
       this.global.hideLoader();
       this.global.errorToast();
     }
@@ -61,13 +60,11 @@ export class AddMenuItemPage implements OnInit {
 
   async changeRestaurant(event) {
     try {
-      console.log(event);
       this.global.showLoader();
       this.categories = await this.categoryService.getRestaurantCategories(event.detail.value);
       this.category = '';
       this.global.hideLoader();
     } catch(e) {
-      console.log(e);
       this.global.hideLoader();
       this.global.errorToast();
     }
@@ -78,8 +75,7 @@ export class AddMenuItemPage implements OnInit {
     if(!form.valid || !this.image) return;
     try {
       this.isLoading = true;
-      const url = await this.uploadImage(this.imageFile);
-      console.log(url);      
+      const url = await this.uploadImage(this.imageFile);    
       if(!url) {
         this.isLoading = false;
         this.global.errorToast('Image not uploaded, please try again');
@@ -91,13 +87,11 @@ export class AddMenuItemPage implements OnInit {
         status: this.status,
         quantity: this.quantity,
         ...form.value
-      };
-      console.log('data: ', data);      
+      };    
       await this.menuService.addMenuItem(data);
       this.isLoading = false;
       this.global.successToast('Menu Item Added Successfully');
     } catch(e) {
-      console.log(e);
       this.isLoading = false;
       this.global.errorToast();
     }
@@ -118,41 +112,16 @@ export class AddMenuItemPage implements OnInit {
   onFileChosen(event) {
     const file = event.target.files[0];
     if(!file) return;
-    console.log('file: ', file);
     this.imageFile = file;
     const reader = new FileReader();
-    console.log(reader);
     reader.onload = () => {
       const dataUrl = reader.result.toString();
       this.image = dataUrl;
-      console.log('image: ', this.image);
     };
     reader.readAsDataURL(file);
   }
 
   async uploadImage(imageFile) {
-    // return new Promise((resolve, reject) => {
-    //   const mimeType = imageFile.type;
-    //   if(mimeType.match(/image\/*/) == null) return;
-    //   const file = imageFile;
-    //   const filePath = 'menu/' + Date.now() + '_' + file.name;
-    //   const fileRef = this.afStorage.ref(filePath);
-    //   const task = this.afStorage.upload(filePath, file);
-    //   task.snapshotChanges()
-    //   .pipe(
-    //     finalize(() => {
-    //       const downloadUrl = fileRef.getDownloadURL();
-    //       downloadUrl.subscribe(url => {
-    //         console.log('url: ', url);
-    //         if(url) {
-    //           resolve(url);
-    //         }
-    //       })
-    //     })
-    //   ).subscribe(url => {
-    //     console.log(url);
-    //   });
-    // });
     try {
       const mimeType = imageFile.type;
       if(mimeType.match(/image\/*/) == null) return;
@@ -161,7 +130,6 @@ export class AddMenuItemPage implements OnInit {
       const url = await this.apiService.uploadImage(file, filePath);
       return url;
     } catch(e) {
-      console.log(e);
       this.global.errorToast('Image upload failed');
     }
   }

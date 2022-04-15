@@ -27,14 +27,12 @@ export class AddressPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addressesSub = this.addressService.addresses.subscribe(address => {
-      console.log('addresses: ', address);
       this.addresses = address;      
     });
     this.getAddresses();
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter AddressPage');
     this.global.customStatusbar();
   }
 
@@ -42,14 +40,10 @@ export class AddressPage implements OnInit, OnDestroy {
     try {
       this.isLoading = true;
       this.global.showLoader();
-    // setTimeout(async() => {
       await this.addressService.getAddresses();
-      console.log(this.addresses);
       this.isLoading = false;
       this.global.hideLoader();
-    // }, 3000);
     } catch(e) {
-      console.log(e);
       this.isLoading = false;
       this.global.hideLoader();
       this.global.errorToast();
@@ -61,7 +55,6 @@ export class AddressPage implements OnInit, OnDestroy {
   }
 
   editAddress(address) {
-    console.log(address);
     const navData: NavigationExtras = {
       queryParams: {
         data: JSON.stringify(address)
@@ -71,7 +64,6 @@ export class AddressPage implements OnInit, OnDestroy {
   }
 
   deleteAddress(address) {
-    console.log('address: ', address);
     this.global.showAlert(
       'Are you sure you want to delete this address?',
       'Confirm',
@@ -80,7 +72,6 @@ export class AddressPage implements OnInit, OnDestroy {
           text: 'No',
           role: 'cancel',
           handler: () => {
-            console.log('cancel');
             return;
           }
         },

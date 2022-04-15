@@ -18,13 +18,11 @@ export class AppComponent {
       
       googleMaps.loadGoogleMaps()
         .then(() => {
-          console.log('Google Maps Ready');
           
           // Create the map with center the user position
           
         })
         .catch(err => {
-          console.log(err);
         });
       });
 

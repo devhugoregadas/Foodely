@@ -138,7 +138,6 @@ export class ApiService {
         item.uid = doc.id;
         return item;
       });
-      console.log(cities);
       return cities;
     } catch(e) {
       throw(e);

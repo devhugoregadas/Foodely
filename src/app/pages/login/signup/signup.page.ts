@@ -29,15 +29,12 @@ export class SignupPage implements OnInit {
 
   register(form: NgForm) {
     this.isLoading = true;
-    console.log(form.value);
     this.authService.register(form.value).then((data: any) => {
-      console.log(data);
       this.navigate(data.type);
       this.isLoading = false;
       form.reset();
     })
     .catch(e => {
-      console.log(e);
       this.isLoading = false;
       let msg: string = 'Could not sign you up, please try again.';
       if(e.code == 'auth/email-already-in-use') {

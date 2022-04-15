@@ -51,7 +51,6 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
   }
 
   async onSearchChange(event) {
-    console.log(event);
     this.global.showLoader();
     this.query = event.detail.value;
     if(this.query.length > 0) await this.maps.getPlaces(this.query);
@@ -64,7 +63,6 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
 
   async choosePlace(place) {
     this.global.showLoader();
-    console.log(place);
     if(this.from) {
       const savedPlace = await this.savedPlaces.find(x => x.lat == place.lat && x.lng == place.lng);
       if(savedPlace?.lat) place = savedPlace;
@@ -79,7 +77,6 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
       const position = await this.locationService.getCurrentLocation();
       const {latitude, longitude} = position.coords; // Gps coordinates along with the accuracy of the data
       const result = await this.maps.getAddress(latitude, longitude);
-      console.log(result);
       const place = {
         title: result.address_components[0].short_name,
         address: result.formatted_address,
@@ -89,7 +86,6 @@ export class SearchLocationComponent implements OnInit, OnDestroy {
       this.global.hideLoader();
       this.dismiss(place);
     } catch(e) {
-      console.log(e);
       this.global.hideLoader();
       this.global.errorToast('Check whether GPS is enabled & the App has its permissions', 5000);
     }

@@ -30,7 +30,6 @@ export class AuthService {
   async login(email: string, password: string): Promise<any> {
     try {
       const response = await signInWithEmailAndPassword(this.fireAuth, email, password);
-      console.log(response);
       if(response.user) {
         const user: any = await this.getUserData(response.user.uid);
         if(user?.type == Strings.TYPE || user?.type == 'admin') {
@@ -48,7 +47,6 @@ export class AuthService {
 
   async getId() {
     const user = this._uid.value;
-    console.log('auth user id: ', user?.uid);
     if(user?.uid) {
       return user.uid;
     } else {
@@ -64,7 +62,6 @@ export class AuthService {
   async register(formValue, type?) {
     try {
       const registeredUser = await createUserWithEmailAndPassword(this.fireAuth, formValue.email, formValue.password);
-      console.log('registered user: ', registeredUser);
       const data = new User(
         formValue.email,
         formValue.phone,
@@ -96,7 +93,6 @@ export class AuthService {
           password: formValue.password
         }
       ).toPromise();
-      console.log('registered user: ', response);
       const uid = response.localId;
       const data = new User(
         formValue.email,
@@ -141,7 +137,6 @@ export class AuthService {
       const result = await signInWithEmailAndPassword(this.fireAuth, oldEmail, password);
       await updateEmail(result.user, newEmail);
     } catch(e) {
-      console.log(e);
       throw(e);
     }
   }
@@ -149,7 +144,6 @@ export class AuthService {
   checkAuth(): Promise<any> {
     return new Promise((resolve, reject) => {
       onAuthStateChanged(this.fireAuth, user => {
-        console.log('auth user: ', user);
         resolve(user)
       });
     });

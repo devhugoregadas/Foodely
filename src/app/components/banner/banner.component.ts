@@ -17,7 +17,6 @@ export class BannerComponent implements OnInit, AfterContentChecked {
   constructor(public router: Router) {}
 
   ngOnInit() {
-    console.log(this.bannerImages);
   }
 
   ngAfterContentChecked(): void {

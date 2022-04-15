@@ -20,7 +20,6 @@ export class AuthGuard implements CanLoad {
       const roleType = _route.data.type;
       try {
         const type = await this.authService.checkUserAuth();
-        console.log(type);
         if(type) {
           if(type == roleType) return true;
           else {
@@ -32,7 +31,6 @@ export class AuthGuard implements CanLoad {
           this.checkForAlert(roleType);
         }
       } catch(e) {
-        console.log(e);
         this.checkForAlert(roleType);
       }
   }
@@ -45,7 +43,6 @@ export class AuthGuard implements CanLoad {
   async checkForAlert(roleType) {
     const id = await this.authService.getId();
     if(id) {
-      console.log('alert: ', id);
       this.showAlert(roleType);
     } else {
       this.authService.logout();

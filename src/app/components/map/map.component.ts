@@ -9,11 +9,6 @@ import { LocationService } from 'src/app/services/location/location.service';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
- 
-  /*Deciding ifstatic should be true or false comes down to whether 
-  or not you are dynamically rendering the element in your template, 
-  like with *ngIf or *ngFor. 
-  */
 
   @ViewChild('map', {static: true}) mapElementRef: ElementRef;
   googleMaps: any;
@@ -37,8 +32,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     await this.initMap();
     this.mapChange = this.maps.markerChange.subscribe(async(loc) => {
       if(loc?.lat) {
-        console.log('loc: ', loc);
-        console.log('maps: ', this.googleMaps);
         const googleMaps = this.googleMaps;
         const location = new googleMaps.LatLng(loc.lat, loc.lng);
         this.map.panTo(location);
@@ -62,9 +55,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         await this.loadMap();
       }
     } catch(e) {
-      console.log(e);
       this.center = { lat: 46.1911115, lng: 6.1357885 };
-      console.log(this.center);
       this.loadMap();
       this.getAddress(this.center.lat, this.center.lng);
     }
@@ -103,7 +94,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       this.renderer.addClass(mapEl, 'visible');
       this.addMarker(location);
     } catch(e) {
-      console.log(e);
     }
   }
 
@@ -121,7 +111,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       animation: googleMaps.Animation.DROP
     });
     this.mapListener = this.googleMaps.event.addListener(this.marker, 'dragend', () => {
-      console.log('markerchange');
       this.getAddress(this.marker.position.lat(), this.marker.position.lng());
     });
   }
@@ -129,17 +118,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   async getAddress(lat, lng) {
     try {
       const result = await this.maps.getAddress(lat, lng);
-      console.log(result);
       const loc = {
         title: result.address_components[0].short_name,
         address: result.formatted_address,
         lat,
         lng
       };
-      console.log(loc);
       this.location.emit(loc);
     } catch(e) {
-      console.log(e);
     }
   }
 

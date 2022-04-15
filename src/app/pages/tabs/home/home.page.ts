@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { map } from 'functions/node_modules/@firebase/util/dist/util-public';
 import { Subscription } from 'rxjs';
 import { SearchLocationComponent } from 'src/app/components/search-location/search-location.component';
 import { Address } from 'src/app/models/address.model';
@@ -38,7 +37,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.addressSub = this.addressService.addressChange.subscribe(address => {
-      console.log('address', address);
       if(address && address?.lat) {
         if(!this.isLoading) this.isLoading = true;
         this.location = address;
@@ -49,7 +47,6 @@ export class HomePage implements OnInit, OnDestroy {
         }
       }
     }, e => {
-      console.log(e);
       this.isLoading = false; 
       this.global.errorToast();
     });
@@ -60,33 +57,21 @@ export class HomePage implements OnInit, OnDestroy {
     }   
   }
 
-  // async getgetLatLngBounds(lat: number, lng: number): Promise<GoogleMapsService> {
-  //   return this.mapService.googleMaps.LatLngBounds.contains(this.location.lat, this.location.lng);
-  // }
-
-  // async getLatLngBounds() {
-  //   this.map.setCenter(new google.maps.LatLng(this.location.lat, this.location.lng));
-  // } 
 
   getBanners() {
     this.bannerService.getBanners().then(data => {
-      console.log('banners: ', data);
       this.banners = data;
     })
     .catch(e => {
-      console.log(e);
     })
   }
 
   async nearbyApiCall() {
     try {
-      console.log(this.location);
       this.restaurants = await this.restaurantService.getNearbyRestaurants(this.location.lat, this.location.lng);
-      console.log(this.restaurants);
       this.isLoading = false;
     } catch(e) {
       // set isLoading to false
-      console.log(e);
       this.global.errorToast();
     }
   }
@@ -94,7 +79,6 @@ export class HomePage implements OnInit, OnDestroy {
   async getNearbyRestaurants() {
     try {
       const position = await this.locationService.getCurrentLocation();
-      console.log('get nearby restaurants', position);
       const { latitude, longitude } = position.coords;
       const address = await this.mapService.getAddress(latitude, longitude);
       if(address) {
@@ -109,10 +93,8 @@ export class HomePage implements OnInit, OnDestroy {
         );
         await this.getData();
       }
-      console.log('restaurants: ', this.restaurants);
       this.isLoading = false;
     } catch(e) {
-      console.log(e);
       this.isLoading = false;
       this.searchLocation('home', 'home-modal');
     }
@@ -123,7 +105,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.restaurants = [];
       await this.addressService.checkExistAddress(this.location);
     } catch(e) {
-      console.log(e);
       this.global.errorToast();
     }
   }
@@ -139,7 +120,6 @@ export class HomePage implements OnInit, OnDestroy {
         }
       };
       const modal = await this.global.createModal(options);
-      console.log('modal value: ', modal);
       if(modal) {
         if(modal == 'add') {
           this.addAddress(this.location);
@@ -150,13 +130,11 @@ export class HomePage implements OnInit, OnDestroy {
           await this.getData();
         }
       } else {
-        console.log('location value: ', this.location);
         if(!this.location || !this.location?.lat) {
           this.searchLocation('home', 'home-modal');
         }
       }
     } catch(e) {
-      console.log(e);
     }
   }
 

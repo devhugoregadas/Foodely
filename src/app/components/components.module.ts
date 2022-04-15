@@ -25,7 +25,6 @@ import { SearchLocationComponent } from './search-location/search-location.compo
     EmptyScreenComponent,
     SearchLocationComponent
   ],
-  // only those components not defined in template
   entryComponents: [
     SearchLocationComponent
   ]
